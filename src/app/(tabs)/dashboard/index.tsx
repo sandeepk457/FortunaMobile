@@ -317,11 +317,12 @@ const [operationsOpen, setOperationsOpen] = useState(false);
 
           {/* INBOUND */}
           <TouchableOpacity
-            style={[
-              styles.kpiCard,
-              styles.inboundCard,
-            ]}
-          >
+  style={[
+    styles.kpiCard,
+    styles.inboundCard,
+  ]}
+  onPress={() => router.push("/inbound")}
+>
 
             <View style={styles.iconCircle}>
               <Ionicons
