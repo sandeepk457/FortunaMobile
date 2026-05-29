@@ -1,5 +1,6 @@
 
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,9 +13,11 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 export default function DashboardScreen() {
 
-  const [showMenu, setShowMenu] = useState(false);
+const [showMenu, setShowMenu] = useState(false);
 const router = useRouter();
+const [warehouseOpen, setWarehouseOpen] = useState(false);
 
+const [operationsOpen, setOperationsOpen] = useState(false);
   return (
     <View style={styles.container}>
 
@@ -39,54 +42,238 @@ const router = useRouter();
         </Text>
 
         {/* NOTIFICATION */}
-        <TouchableOpacity>
-          <Ionicons
-            name="notifications-outline"
-            size={24}
-            color="#FFFFFF"
-          />
-        </TouchableOpacity>
+         <TouchableOpacity
+    onPress={() =>
+      router.push(
+        "/dashboard/alerts-dashboard"
+      )
+    }
+  >
+    <Ionicons
+      name="notifications-outline"
+      size={24}
+      color="#FFFFFF"
+    />
+  </TouchableOpacity>
 
       </View>
 
     {showMenu && (
-  <View style={styles.sideMenu}>
-
+  <>
     <TouchableOpacity
-  style={styles.menuItem}
+      style={styles.overlay}
+      activeOpacity={1}
+      onPress={() => setShowMenu(false)}
+    />
+
+    <View style={styles.sideMenu}>
+
+      <TouchableOpacity
+        style={styles.closeBtn}
+        onPress={() => setShowMenu(false)}
+      >
+        <Ionicons
+          name="close"
+          size={28}
+          color="#C8102E"
+        />
+      </TouchableOpacity>
+
+      <View style={styles.menuHeader}>
+        <Image
+          source={require("../../../../assets/images/sims-logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+
+        {/* <Text style={styles.logoTitle}>
+          Fortuna SIMS
+        </Text>
+
+        <Text style={styles.logoSub}>
+          Supply & Inventory Management
+        </Text> */}
+      </View>
+
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => setWarehouseOpen(!warehouseOpen)}
+      >
+        <Text style={styles.menuText}>
+          🏭 Warehouse
+        </Text>
+
+        <Ionicons
+          name={
+            warehouseOpen
+              ? "chevron-up"
+              : "chevron-down"
+          }
+          size={18}
+          color="#C8102E"
+        />
+      </TouchableOpacity>
+
+      {warehouseOpen && (
+        <View style={styles.subMenuContainer}>
+
+          <TouchableOpacity
+            style={styles.subMenu}
+            onPress={() => {
+              setShowMenu(false);
+              router.push("/dashboard/warehouse-selection");
+            }}
+          >
+            <Text style={styles.subMenuText}>
+              Change Warehouse
+            </Text>
+          </TouchableOpacity>
+
+            
+          
+
+          <TouchableOpacity
+  style={styles.subMenu}
   onPress={() => {
     setShowMenu(false);
 
     router.push(
-      "/dashboard/warehouse-selection"
+      "/dashboard/shift-login"
     );
   }}
 >
-  <Text style={styles.menuText}>
-    🏭 Change Warehouse
+  <Text style={styles.subMenuText}>
+    Shift Login
   </Text>
 </TouchableOpacity>
 
-    <TouchableOpacity style={styles.menuItem}>
-      <Text style={styles.menuText}>
-        👷 Shift Login
+          <TouchableOpacity
+  style={styles.subMenu}
+  onPress={() => {
+    setShowMenu(false);
+
+    router.push(
+      "/dashboard/device-binding"
+    );
+  }}
+>
+  <Text style={styles.subMenuText}>
+    Device Binding
+  </Text>
+</TouchableOpacity>
+
+        </View>
+      )}
+
+      <TouchableOpacity
+  style={styles.menuItem}
+  onPress={() => setOperationsOpen(!operationsOpen)}
+>
+  <Text style={styles.menuText}>
+    📦 Operations
+  </Text>
+
+  <Ionicons
+    name={
+      operationsOpen
+        ? "chevron-up"
+        : "chevron-down"
+    }
+    size={18}
+    color="#C8102E"
+  />
+</TouchableOpacity>
+
+{operationsOpen && (
+  <View style={styles.subMenuContainer}>
+
+    <TouchableOpacity
+      style={styles.subMenu}
+      onPress={() => {
+        setShowMenu(false);
+        router.push("/inbound");
+      }}
+    >
+      <Text style={styles.subMenuText}>
+        📥 Inbound
       </Text>
     </TouchableOpacity>
 
-    <TouchableOpacity style={styles.menuItem}>
-      <Text style={styles.menuText}>
-        📦 My Tasks
+    <TouchableOpacity
+      style={styles.subMenu}
+      onPress={() => {
+        setShowMenu(false);
+        router.push("/outbound");
+      }}
+    >
+      <Text style={styles.subMenuText}>
+        📤 Outbound
       </Text>
     </TouchableOpacity>
 
-    <TouchableOpacity style={styles.menuItem}>
-      <Text style={styles.menuText}>
-        ⚙ Settings
+    <TouchableOpacity
+      style={styles.subMenu}
+      onPress={() => {
+        setShowMenu(false);
+        router.push("/transfer");
+      }}
+    >
+      <Text style={styles.subMenuText}>
+        🔄 Transfers
+      </Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      style={styles.subMenu}
+      onPress={() => {
+        setShowMenu(false);
+        router.push("/cyclecount");
+      }}
+    >
+      <Text style={styles.subMenuText}>
+        📋 Cycle Count
       </Text>
     </TouchableOpacity>
 
   </View>
 )}
+
+
+      <TouchableOpacity
+  style={styles.menuItem}
+  onPress={() => {
+    setShowMenu(false);
+
+    router.push("/dashboard/my-tasks");
+  }}
+>
+  <Text style={styles.menuText}>
+    📋 My Tasks
+  </Text>
+</TouchableOpacity>
+
+      <TouchableOpacity style={styles.menuItem}>
+        <Text style={styles.menuText}>⚙ Settings</Text>
+      </TouchableOpacity>
+
+      <View style={styles.logoutContainer}>
+   <TouchableOpacity
+  style={styles.logoutButton}
+  onPress={() => {
+    setShowMenu(false);
+    router.replace("/auth/login");
+  }}
+>
+  <Text style={styles.logoutText}>
+    Sign Out
+  </Text>
+</TouchableOpacity>
+      </View>
+
+    </View>
+  </>
+)}
+
 
 
       {/* BODY */}
@@ -561,19 +748,18 @@ const styles = StyleSheet.create({
 
   /* SIDE MENU */
 
-  sideMenu: {
+sideMenu: {
   position: "absolute",
-  top: 95,
-  left: 10,
-  width: 240,
+
+  top: 0,
+  left: 0,
+
+  width: "75%",
+  height: "100%",
 
   backgroundColor: "#FFFFFF",
 
-  borderRadius: 16,
-
-  padding: 12,
-
-  elevation: 10,
+  paddingTop: 70,
 
   zIndex: 999,
 },
@@ -593,5 +779,122 @@ menuText: {
 
   color: "#333333",
 },
+
+logoutContainer: {
+  position: "absolute",
+  bottom: 30,
+  left: 20,
+  right: 20,
+},
+
+logoutButton: {
+  flexDirection: "row",
+  alignItems: "center",
+  borderTopWidth: 1,
+  borderColor: "#EEEEEE",
+  paddingTop: 15,
+},
+
+logoutText: {
+  marginLeft: 10,
+  color: "#C8102E",
+  fontWeight: "700",
+  fontSize: 16,
+},
+
+overlay: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0,0,0,0.35)",
+  zIndex: 998,
+},
+
+closeBtn: {
+  position: "absolute",
+  right: 15,
+  top: 15,
+  zIndex: 1000,
+},
+
+menuHeader: {
+  alignItems: "center",
+
+  paddingTop: 10,
+  paddingBottom: 25,
+
+  marginBottom: 20,
+
+  borderBottomWidth: 1,
+  borderBottomColor: "#E5E7EB",
+},
+
+logo: {
+  width: 240,
+  height: 130,
+},
+
+logoTitle: {
+  fontSize: 20,
+  fontWeight: "800",
+  color: "#005F99",
+},
+
+logoSub: {
+  fontSize: 12,
+  color: "#64748B",
+},
+
+sideMenu: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "80%",
+  height: "100%",
+  backgroundColor: "#F8FAFC",
+  paddingTop: 50,
+  paddingHorizontal: 15,
+  zIndex: 999,
+},
+
+menuItem: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+
+  backgroundColor: "#FFFFFF",
+
+  borderWidth: 1,
+  borderColor: "#D9E2EC",
+
+  borderRadius: 12,
+
+  paddingVertical: 14,
+  paddingHorizontal: 15,
+
+  marginBottom: 10,
+},
+
+subMenuContainer: {
+  marginLeft: 10,
+  marginBottom: 10,
+},
+
+subMenu: {
+  backgroundColor: "#FFFFFF",
+  borderLeftWidth: 3,
+  borderLeftColor: "#C8102E",
+  paddingVertical: 12,
+  paddingHorizontal: 12,
+  marginBottom: 6,
+},
+
+subMenuText: {
+  color: "#444",
+  fontWeight: "500",
+},
+
 
 });

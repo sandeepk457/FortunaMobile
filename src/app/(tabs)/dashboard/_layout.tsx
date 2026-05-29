@@ -22,6 +22,10 @@ export default function DashboardLayout() {
       />
 
       <Stack.Screen
+        name="my-tasks"
+      />
+
+      <Stack.Screen
         name="alerts-dashboard"
       />
     </Stack>
