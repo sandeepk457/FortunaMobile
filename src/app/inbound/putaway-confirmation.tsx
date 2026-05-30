@@ -27,6 +27,12 @@ export default function PutawayConfirmationScreen() {
   const [selectedBin, setSelectedBin] =
     useState("BIN-A01-01");
 
+    const suggestedBin = {
+  bin: "BIN-A01-01",
+  capacity: 420,
+  occupancy: "58%",
+};
+
   const bins = [
     "BIN-A01-01",
     "BIN-A01-02",
@@ -212,6 +218,41 @@ const filteredItems = items.filter(
             </Text>
           </TouchableOpacity>
         </View>
+
+            {/* Suggested Bin */}
+<View style={styles.card}>
+
+  <Text style={styles.sectionTitle}>
+    Suggested Bin
+  </Text>
+
+  <Text style={styles.infoText}>
+    Bin : {suggestedBin.bin}
+  </Text>
+
+  <Text style={styles.infoText}>
+    Available Capacity : {suggestedBin.capacity}
+  </Text>
+
+  <Text style={styles.infoText}>
+    Occupancy : {suggestedBin.occupancy}
+  </Text>
+
+  <TouchableOpacity
+    style={styles.suggestedButton}
+    onPress={() =>
+      setSelectedBin(
+        suggestedBin.bin
+      )
+    }
+  >
+    <Text style={styles.buttonText}>
+      USE SUGGESTED BIN
+    </Text>
+  </TouchableOpacity>
+
+</View>
+
 
         {/* Search Bin */}
         <View style={styles.card}>
@@ -438,5 +479,17 @@ const styles = StyleSheet.create({
 
     fontSize: 15,
   },
+
+  suggestedButton: {
+  backgroundColor: "#16A34A",
+
+  marginTop: 10,
+
+  padding: 12,
+
+  borderRadius: 12,
+
+  alignItems: "center",
+},
 
 });

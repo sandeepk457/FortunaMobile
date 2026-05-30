@@ -22,6 +22,8 @@ export default function QCInspectionScreen() {
 
 const [searchSKU, setSearchSKU] = useState("");
 
+ const qcDate =
+  new Date().toLocaleDateString();
 
 
   const items = [
@@ -172,6 +174,24 @@ const capturePhoto = async () => {
           </Text>
         </View>
 
+
+        {/* QC Information */}
+<View style={styles.card}>
+
+  <Text style={styles.sectionTitle}>
+    QC Information
+  </Text>
+
+  <Text style={styles.infoText}>
+    QC Inspector : Sandeep
+  </Text>
+
+  <Text style={styles.infoText}>
+    QC Date : {qcDate}
+  </Text>
+
+</View>
+       
         {/* QC Result */}
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>
