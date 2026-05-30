@@ -26,7 +26,7 @@ export default function InboundLayout() {
       />
 
       <Stack.Screen
-        name="barcode-scan"
+        name="item-scan"
       />
 
       <Stack.Screen
