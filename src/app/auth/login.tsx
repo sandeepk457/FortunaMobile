@@ -1,14 +1,14 @@
 import { useState } from "react";
 import {
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -17,16 +17,81 @@ import { useRouter } from "expo-router";
 export default function LoginScreen() {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+const [error, setError] = useState("");
+const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] =
     useState(false);
 
-  const handleLogin = () => {
-    router.replace(
-      "/dashboard"
+  const handleLogin = async () => {
+
+  try {
+
+    setError("");
+
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await fetch(
+      "http://192.168.0.102:5000/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
     );
-  };
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      console.log(
+        "Logged User",
+        data.user
+      );
+
+      router.replace(
+        "/dashboard"
+      );
+
+    } else {
+
+      setError(
+        data.message
+      );
+
+    }
+
+  } catch (err) {
+
+    console.log(err);
+
+    setError(
+      "Unable to connect server"
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
 
   return (
     <KeyboardAvoidingView
@@ -66,23 +131,25 @@ export default function LoginScreen() {
 
           {/* USERNAME */}
           <Text style={styles.label}>
-            Username
+            Email Address
           </Text>
 
           <View style={styles.inputContainer}>
             <Ionicons
-              name="person-outline"
-              size={20}
-              color="#005F99"
-            />
+  name="mail-outline"
+  size={20}
+  color="#005F99"
+/>
 
             <TextInput
-              placeholder="Enter username"
-              placeholderTextColor="#999"
-              style={styles.input}
-              value={username}
-              onChangeText={setUsername}
-            />
+  style={styles.input}
+  placeholder="Enter email"
+  placeholderTextColor="#999"
+  keyboardType="email-address"
+  autoCapitalize="none"
+  value={email}
+  onChangeText={setEmail}
+/>
           </View>
 
           {/* PASSWORD */}
@@ -139,16 +206,24 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
 
+          {error ? (
+  <Text style={styles.errorText}>
+    {error}
+  </Text>
+) : null}
+
           {/* LOGIN BUTTON */}
           <TouchableOpacity
             style={styles.loginButton}
             onPress={handleLogin}
           >
             <Text
-              style={styles.loginButtonText}
-            >
-              SIGN IN
-            </Text>
+  style={styles.loginButtonText}
+>
+  {loading
+    ? "PLEASE WAIT..."
+    : "SIGN IN"}
+</Text>
           </TouchableOpacity>
 
         </View>
@@ -245,11 +320,14 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    flex: 1,
-    marginLeft: 10,
-    color: "#000",
-    fontSize: 16,
-  },
+  flex: 1,
+  marginLeft: 10,
+  color: "#000",
+  fontSize: 16,
+  borderWidth: 0,
+  backgroundColor: "transparent",
+  paddingVertical: 0,
+} as any,
 
   forgotContainer: {
     alignItems: "flex-end",
@@ -259,6 +337,12 @@ const styles = StyleSheet.create({
   forgotText: {
     color: "#C8102E",
     fontWeight: "600",
+  },
+
+  errorText: {
+    color: "#C8102E",
+    marginBottom: 12,
+    textAlign: "center",
   },
 
   loginButton: {
