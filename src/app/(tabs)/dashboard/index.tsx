@@ -1,4 +1,5 @@
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -9,9 +10,63 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+
+
+
 export default function DashboardScreen() {
+
+  const [userName, setUserName] = useState("");
+const [userRole, setUserRole] = useState("");
+const [isLoaded, setIsLoaded] =
+  useState(false);
+
+useFocusEffect(
+  useCallback(() => {
+    loadUser();
+  }, [])
+);
+
+const loadUser = async () => {
+  try {
+    const storedUser =
+      await AsyncStorage.getItem(
+        "loggedUser"
+      );
+
+    console.log(
+      "STORED USER:",
+      storedUser
+    );
+
+    if (storedUser) {
+      const user =
+        JSON.parse(storedUser);
+
+      console.log(
+        "PARSED USER:",
+        user
+      );
+
+      setUserName(
+        user.name ||
+        user.full_name ||
+        ""
+      );
+
+      setUserRole(
+        user.role || ""
+      );
+
+      setIsLoaded(true);
+    }
+  } catch (err) {
+    console.log(
+      "User Load Error",
+      err
+    );
+  }
+};
 
 const [showMenu, setShowMenu] = useState(false);
 const router = useRouter();
@@ -288,7 +343,7 @@ const [operationsOpen, setOperationsOpen] = useState(false);
         <View style={styles.welcomeCard}>
 
           <Text style={styles.welcomeText}>
-            Welcome Sandeep 👋
+            Welcome {userName} 👋
           </Text>
 
           <Text style={styles.warehouseText}>

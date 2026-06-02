@@ -12,14 +12,14 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-
 export default function LoginScreen() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
-const [error, setError] = useState("");
-const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] =
     useState(false);
@@ -56,26 +56,40 @@ const [loading, setLoading] = useState(false);
       }
     );
 
-    const data = await response.json();
+    if (!response.ok) {
+  throw new Error("Server Error");
+}
+
+const data = await response.json();
 
     if (data.success) {
 
-      console.log(
-        "Logged User",
-        data.user
-      );
+  console.log(
+    "Logged User",
+    data.user
+  );
 
-      router.replace(
-        "/dashboard"
-      );
+  await AsyncStorage.setItem(
+  "loggedUser",
+  JSON.stringify(data.user)
+);
 
-    } else {
+await AsyncStorage.setItem(
+  "isLoggedIn",
+  "true"
+);
 
-      setError(
-        data.message
-      );
+  router.replace(
+    "/dashboard"
+  );
 
-    }
+} else {
+
+  setError(
+    data.message
+  );
+
+}
 
   } catch (err) {
 
@@ -117,7 +131,7 @@ const [loading, setLoading] = useState(false);
           />
 
           <Text style={styles.title}>
-            Fortuna SIMS
+            FORTUNA SIMS
           </Text>
 
           <Text style={styles.subtitle}>
@@ -322,7 +336,7 @@ const styles = StyleSheet.create({
   input: {
   flex: 1,
   marginLeft: 10,
-  color: "#000",
+  color: "#232222",
   fontSize: 16,
   borderWidth: 0,
   backgroundColor: "transparent",
