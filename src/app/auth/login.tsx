@@ -43,53 +43,42 @@ export default function LoginScreen() {
     setLoading(true);
 
     const response = await fetch(
-      "http://192.168.0.102:5000/api/auth/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      }
-    );
+  "http://localhost:5000/api/auth/login",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  }
+);
 
+console.log("STATUS:", response.status);
     if (!response.ok) {
-  throw new Error("Server Error");
-}
+      throw new Error("Server Error");
+    }
 
-const data = await response.json();
+    const data = await response.json();
+
+    console.log("LOGIN DATA:", data);
 
     if (data.success) {
+      console.log("Logged User", data.user);
 
-  console.log(
-    "Logged User",
-    data.user
-  );
+      await AsyncStorage.setItem(
+        "loggedUser",
+        JSON.stringify(data.user)
+      );
 
-  await AsyncStorage.setItem(
-  "loggedUser",
-  JSON.stringify(data.user)
-);
+      await AsyncStorage.setItem("isLoggedIn", "true");
 
-await AsyncStorage.setItem(
-  "isLoggedIn",
-  "true"
-);
-
-  router.replace(
-    "/dashboard"
-  );
-
-} else {
-
-  setError(
-    data.message
-  );
-
-}
+      router.replace("/dashboard");
+    } else {
+      setError(data.message);
+    }
 
   } catch (err) {
 
