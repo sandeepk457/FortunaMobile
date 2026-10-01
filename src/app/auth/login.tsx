@@ -24,77 +24,75 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] =
     useState(false);
 
+
   const handleLogin = async () => {
+    try {
+      setError("");
 
-  try {
+      if (!email.trim()) {
+        setError("Email is required");
+        return;
+      }
 
-    setError("");
+      if (!password.trim()) {
+        setError("Password is required");
+        return;
+      }
 
-    if (!email.trim()) {
-      setError("Email is required");
-      return;
-    }
+      const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-    if (!password.trim()) {
-      setError("Password is required");
-      return;
-    }
+      if (!API_URL) {
+        setError("Server configuration is missing");
+        console.error("EXPO_PUBLIC_API_URL is not configured");
+        return;
+      }
 
-    setLoading(true);
+      setLoading(true);
 
-    const response = await fetch(
-  "http://localhost:5000/api/auth/login",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  }
-);
-
-console.log("STATUS:", response.status);
-    if (!response.ok) {
-      throw new Error("Server Error");
-    }
-
-    const data = await response.json();
-
-    console.log("LOGIN DATA:", data);
-
-    if (data.success) {
-      console.log("Logged User", data.user);
-
-      await AsyncStorage.setItem(
-        "loggedUser",
-        JSON.stringify(data.user)
+      const response = await fetch(
+        `${API_URL.replace(/\/+$/, "")}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+          }),
+        }
       );
 
-      await AsyncStorage.setItem("isLoggedIn", "true");
+      console.log("LOGIN STATUS:", response.status);
 
-      router.replace("/dashboard");
-    } else {
-      setError(data.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(
+          data?.message || "Unable to login. Please check your credentials."
+        );
+        return;
+      }
+
+      if (data.success) {
+        await AsyncStorage.setItem(
+          "loggedUser",
+          JSON.stringify(data.user)
+        );
+
+        await AsyncStorage.setItem("isLoggedIn", "true");
+
+        router.replace("/dashboard");
+      } else {
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Unable to connect server");
+    } finally {
+      setLoading(false);
     }
-
-  } catch (err) {
-
-    console.log(err);
-
-    setError(
-      "Unable to connect server"
-    );
-
-  } finally {
-
-    setLoading(false);
-
-  }
-
-};
+  };
 
   return (
     <KeyboardAvoidingView
