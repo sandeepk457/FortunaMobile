@@ -5,6 +5,8 @@ export default function DashboardLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
+        animationDuration: 360,
       }}
     >
       <Stack.Screen name="index" />

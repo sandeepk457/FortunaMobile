@@ -4,6 +4,8 @@ import {
   View,
 } from "react-native";
 
+import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
+import HoverCard from "@/components/ui/HoverCard";
 import { COLORS } from "@/theme/colors";
 
 interface Props {
@@ -18,55 +20,64 @@ export default function KpiCard({
   color,
 }: Props) {
   return (
-    <View
-      style={[
-        styles.card,
-        {
-          borderTopColor: color,
-        },
-      ]}
-    >
-      <Text style={styles.value}>
-        {value}
-      </Text>
+    <AnimatedEntrance style={styles.wrapper}>
+      <HoverCard style={styles.hoverCard}>
+        <View style={[styles.card, { borderTopColor: color }]}>
+          <View style={[styles.accent, { backgroundColor: color }]} />
+          <Text style={styles.value}>
+            {value}
+          </Text>
 
-      <Text style={styles.title}>
-        {title}
-      </Text>
-    </View>
+          <Text style={styles.title}>
+            {title}
+          </Text>
+        </View>
+      </HoverCard>
+    </AnimatedEntrance>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: "48%",
-
-    backgroundColor: COLORS.card,
-
-    borderRadius: 18,
-
-    padding: 18,
-
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 17,
     marginBottom: 14,
-
-    borderTopWidth: 5,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-
+    borderTopWidth: 3,
+    borderColor: "#E0EAF2",
+    borderWidth: 1,
+    shadowColor: COLORS.secondary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
     elevation: 4,
   },
 
+  wrapper: {
+    width: "48%",
+  },
+
+  hoverCard: {
+    flex: 1,
+  },
+
+  accent: {
+    width: 32,
+    height: 4,
+    borderRadius: 3,
+    marginBottom: 12,
+  },
+
   value: {
-    color: COLORS.textPrimary,
+    color: "#172033",
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: "900",
   },
 
   title: {
-    color: COLORS.textSecondary,
-    marginTop: 8,
+    color: "#64788C",
+    marginTop: 6,
     fontSize: 14,
   },
 });

@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  Animated,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,74 +10,60 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect, useRouter } from "expo-router";
+import HoverCard from "@/components/ui/HoverCard";
 
 
 
 export default function DashboardScreen() {
-
   const [userName, setUserName] = useState("");
-const [userRole, setUserRole] = useState("");
-const [isLoaded, setIsLoaded] =
-  useState(false);
+  const loadUser = useCallback(async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("loggedUser");
 
-useFocusEffect(
-  useCallback(() => {
-    loadUser();
-  }, [])
-);
-
-const loadUser = async () => {
-  try {
-    const storedUser =
-      await AsyncStorage.getItem(
-        "loggedUser"
-      );
-
-    console.log(
-      "STORED USER:",
-      storedUser
-    );
-
-    if (storedUser) {
-      const user =
-        JSON.parse(storedUser);
-
-      console.log(
-        "PARSED USER:",
-        user
-      );
-
-      setUserName(
-        user.name ||
-        user.full_name ||
-        ""
-      );
-
-      setUserRole(
-        user.role || ""
-      );
-
-      setIsLoaded(true);
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        setUserName(user.name || user.full_name || "");
+      }
+    } catch (err) {
+      console.log("User Load Error", err);
     }
-  } catch (err) {
-    console.log(
-      "User Load Error",
-      err
-    );
-  }
-};
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadUser();
+    }, [loadUser])
+  );
 
 const [showMenu, setShowMenu] = useState(false);
 const router = useRouter();
 const [warehouseOpen, setWarehouseOpen] = useState(false);
 
 const [operationsOpen, setOperationsOpen] = useState(false);
+const [pageAnim] = useState(() => new Animated.Value(0));
+
+useEffect(() => {
+  const animation = Animated.timing(pageAnim, {
+    toValue: 1,
+    duration: 650,
+    useNativeDriver: true,
+  });
+  animation.start();
+  return () => animation.stop();
+}, [pageAnim]);
+
   return (
     <View style={styles.container}>
 
       {/* HEADER */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={["#C8102E", "#B50E29"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
 
         {/* MENU ICON */}
        <TouchableOpacity
@@ -111,7 +97,7 @@ const [operationsOpen, setOperationsOpen] = useState(false);
     />
   </TouchableOpacity>
 
-      </View>
+      </LinearGradient>
 
     {showMenu && (
   <>
@@ -332,15 +318,30 @@ const [operationsOpen, setOperationsOpen] = useState(false);
 
 
       {/* BODY */}
-      <ScrollView
+      <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: 120,
         }}
+        style={{
+          opacity: pageAnim,
+          transform: [{
+            translateY: pageAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [18, 0],
+            }),
+          }],
+        }}
       >
 
         {/* WELCOME CARD */}
-        <View style={styles.welcomeCard}>
+        <HoverCard style={styles.welcomeCardWrap}>
+          <LinearGradient
+            colors={["#C8102E", "#005F99"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.welcomeCard}
+          >
 
           <Text style={styles.welcomeText}>
             Welcome {userName} 👋
@@ -359,8 +360,8 @@ const [operationsOpen, setOperationsOpen] = useState(false);
             </Text>
 
           </View>
-
-        </View>
+          </LinearGradient>
+        </HoverCard>
 
         {/* SECTION TITLE */}
         <Text style={styles.sectionTitle}>
@@ -371,13 +372,14 @@ const [operationsOpen, setOperationsOpen] = useState(false);
         <View style={styles.kpiGrid}>
 
           {/* INBOUND */}
-          <TouchableOpacity
-  style={[
-    styles.kpiCard,
-    styles.inboundCard,
-  ]}
-  onPress={() => router.push("/inbound")}
->
+          <HoverCard style={styles.kpiHover}>
+            <TouchableOpacity
+              style={[
+                styles.kpiCard,
+                styles.inboundCard,
+              ]}
+              onPress={() => router.push("/inbound")}
+            >
 
             <View style={styles.iconCircle}>
               <Ionicons
@@ -395,15 +397,17 @@ const [operationsOpen, setOperationsOpen] = useState(false);
               Pending Inbound
             </Text>
 
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </HoverCard>
 
           {/* OUTBOUND */}
-          <TouchableOpacity
-            style={[
-              styles.kpiCard,
-              styles.outboundCard,
-            ]}
-          >
+          <HoverCard style={styles.kpiHover}>
+            <TouchableOpacity
+              style={[
+                styles.kpiCard,
+                styles.outboundCard,
+              ]}
+            >
 
             <View style={styles.iconCircle}>
               <Ionicons
@@ -421,15 +425,17 @@ const [operationsOpen, setOperationsOpen] = useState(false);
               Pending Outbound
             </Text>
 
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </HoverCard>
 
           {/* TRANSFER */}
-          <TouchableOpacity
-            style={[
-              styles.kpiCard,
-              styles.transferCard,
-            ]}
-          >
+          <HoverCard style={styles.kpiHover}>
+            <TouchableOpacity
+              style={[
+                styles.kpiCard,
+                styles.transferCard,
+              ]}
+            >
 
             <View style={styles.iconCircle}>
               <Ionicons
@@ -447,15 +453,17 @@ const [operationsOpen, setOperationsOpen] = useState(false);
               Transfers
             </Text>
 
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </HoverCard>
 
           {/* COUNT */}
-          <TouchableOpacity
-            style={[
-              styles.kpiCard,
-              styles.countCard,
-            ]}
-          >
+          <HoverCard style={styles.kpiHover}>
+            <TouchableOpacity
+              style={[
+                styles.kpiCard,
+                styles.countCard,
+              ]}
+            >
 
             <View style={styles.iconCircle}>
               <Ionicons
@@ -473,7 +481,8 @@ const [operationsOpen, setOperationsOpen] = useState(false);
               Cycle Count
             </Text>
 
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </HoverCard>
 
         </View>
 
@@ -483,7 +492,8 @@ const [operationsOpen, setOperationsOpen] = useState(false);
         </Text>
 
         {/* TASK CARD */}
-        <TouchableOpacity style={styles.taskCard}>
+        <HoverCard style={styles.taskHover}>
+          <TouchableOpacity style={styles.taskCard}>
 
           <View>
             <Text style={styles.taskTitle}>
@@ -503,10 +513,12 @@ const [operationsOpen, setOperationsOpen] = useState(false);
             />
           </View>
 
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </HoverCard>
 
         {/* TASK CARD */}
-        <TouchableOpacity style={styles.taskCard}>
+        <HoverCard style={styles.taskHover}>
+          <TouchableOpacity style={styles.taskCard}>
 
           <View>
             <Text style={styles.taskTitle}>
@@ -526,10 +538,12 @@ const [operationsOpen, setOperationsOpen] = useState(false);
             />
           </View>
 
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </HoverCard>
 
         {/* TASK CARD */}
-        <TouchableOpacity style={styles.taskCard}>
+        <HoverCard style={styles.taskHover}>
+          <TouchableOpacity style={styles.taskCard}>
 
           <View>
             <Text style={styles.taskTitle}>
@@ -541,7 +555,7 @@ const [operationsOpen, setOperationsOpen] = useState(false);
             </Text>
           </View>
 
-          <View style={styles.yellowAction}>
+          <View style={styles.blueAction}>
             <Ionicons
               name="arrow-forward"
               size={22}
@@ -549,9 +563,10 @@ const [operationsOpen, setOperationsOpen] = useState(false);
             />
           </View>
 
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </HoverCard>
 
-      </ScrollView>
+      </Animated.ScrollView>
 
     </View>
   );
@@ -561,14 +576,13 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: "#EEF5FA",
   },
 
   /* HEADER */
 
   header: {
     height: 95,
-    backgroundColor: "#C8102E",
 
     paddingTop: 35,
     paddingHorizontal: 18,
@@ -576,6 +590,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 8,
   },
 
   menuBtn: {
@@ -591,32 +612,32 @@ const styles = StyleSheet.create({
   /* WELCOME CARD */
 
   welcomeCard: {
-    backgroundColor: "#FFFFFF",
-
-    margin: 18,
     borderRadius: 24,
-
     padding: 22,
+    overflow: "hidden",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 8,
+  },
 
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-
-    elevation: 3,
+  welcomeCardWrap: {
+    margin: 18,
   },
 
   welcomeText: {
     fontSize: 22,
     fontWeight: "700",
 
-    color: "#5A3418",
+    color: "#FFFFFF",
   },
 
   warehouseText: {
     marginTop: 12,
 
     fontSize: 18,
-    color: "#8B5E3C",
+    color: "rgba(255,255,255,0.82)",
   },
 
   onlineRow: {
@@ -632,13 +653,13 @@ const styles = StyleSheet.create({
 
     borderRadius: 20,
 
-    backgroundColor: "#22C55E",
+    backgroundColor: "#FFFFFF",
   },
 
   onlineText: {
     marginLeft: 10,
 
-    color: "#16A34A",
+    color: "#FFFFFF",
 
     fontSize: 16,
     fontWeight: "700",
@@ -650,7 +671,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
 
-    color: "#5A3418",
+    color: "#172033",
 
     marginHorizontal: 18,
     marginTop: 12,
@@ -669,15 +690,24 @@ const styles = StyleSheet.create({
   },
 
   kpiCard: {
-    width: "47%",
-
+    flex: 1,
     borderRadius: 28,
 
     padding: 20,
 
-    marginBottom: 18,
-
     minHeight: 200,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.32)",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.2,
+    shadowRadius: 18,
+    elevation: 7,
+  },
+
+  kpiHover: {
+    width: "47%",
+    marginBottom: 18,
   },
 
   inboundCard: {
@@ -732,9 +762,6 @@ const styles = StyleSheet.create({
   taskCard: {
     backgroundColor: "#FFFFFF",
 
-    marginHorizontal: 18,
-    marginBottom: 18,
-
     borderRadius: 22,
 
     padding: 22,
@@ -743,24 +770,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
 
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    borderWidth: 1,
+    borderColor: "#D8E6F0",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    elevation: 3,
+  },
 
-    elevation: 2,
+  taskHover: {
+    marginHorizontal: 18,
+    marginBottom: 18,
   },
 
   taskTitle: {
     fontSize: 22,
     fontWeight: "700",
 
-    color: "#5A3418",
+    color: "#172033",
   },
 
   taskSub: {
     marginTop: 10,
 
-    color: "#8B5E3C",
+    color: "#64788C",
 
     fontSize: 16,
   },
@@ -789,44 +823,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  yellowAction: {
-    width: 48,
-    height: 48,
-
-    borderRadius: 30,
-
-    backgroundColor: "#F59E0B",
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-
   /* SIDE MENU */
-
-sideMenu: {
-  position: "absolute",
-
-  top: 0,
-  left: 0,
-
-  width: "75%",
-  height: "100%",
-
-  backgroundColor: "#FFFFFF",
-
-  paddingTop: 70,
-
-  zIndex: 999,
-},
-
-menuItem: {
-  paddingVertical: 14,
-
-  borderBottomWidth: 1,
-
-  borderBottomColor: "#EEEEEE",
-},
 
 menuText: {
   fontSize: 16,

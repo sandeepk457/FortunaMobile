@@ -8,7 +8,10 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
+import HoverCard from "@/components/ui/HoverCard";
 
 export default function AlertsDashboardScreen() {
   const router = useRouter();
@@ -83,7 +86,12 @@ export default function AlertsDashboardScreen() {
       }}
     >
       {/* HEADER */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={["#C8102E", "#A90D27", "#005F99"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <TouchableOpacity
           onPress={() => router.back()}
         >
@@ -99,72 +107,77 @@ export default function AlertsDashboardScreen() {
         </Text>
 
         <View style={{ width: 24 }} />
-      </View>
+      </LinearGradient>
 
       {/* SUMMARY */}
-      <View style={styles.summaryCard}>
-        <Text style={styles.summaryTitle}>
-          Active Alerts
-        </Text>
+      <AnimatedEntrance delay={80} style={styles.summaryWrap}>
+        <HoverCard>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryTitle}>
+              Active Alerts
+            </Text>
 
-        <Text style={styles.summaryCount}>
-          6
-        </Text>
+            <Text style={styles.summaryCount}>
+              6
+            </Text>
 
-        <Text style={styles.summaryText}>
-          Warehouse Notifications
-        </Text>
-      </View>
+            <Text style={styles.summaryText}>
+              Warehouse Notifications
+            </Text>
+          </View>
+        </HoverCard>
+      </AnimatedEntrance>
 
       {/* ALERTS */}
-      {alerts.map((alert) => (
-        <TouchableOpacity
-          key={alert.id}
-          style={styles.alertCard}
-        >
-          <View
-            style={[
-              styles.iconContainer,
-              {
-                backgroundColor:
-                  alert.color,
-              },
-            ]}
-          >
-            <Ionicons
-              name={alert.icon as any}
-              size={24}
-              color="#FFF"
-            />
-          </View>
+      {alerts.map((alert, index) => (
+        <AnimatedEntrance key={alert.id} delay={140 + index * 65} style={styles.alertWrap}>
+          <HoverCard>
+            <TouchableOpacity activeOpacity={0.82} style={styles.alertCard}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  {
+                    backgroundColor:
+                      alert.color,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name={alert.icon as any}
+                  size={24}
+                  color="#FFF"
+                />
+              </View>
 
-          <View style={styles.alertInfo}>
-            <Text style={styles.alertTitle}>
-              {alert.title}
-            </Text>
+              <View style={styles.alertInfo}>
+                <Text style={styles.alertTitle}>
+                  {alert.title}
+                </Text>
 
-            <Text style={styles.alertDesc}>
-              {alert.description}
-            </Text>
+                <Text style={styles.alertDesc}>
+                  {alert.description}
+                </Text>
 
-            <Text
-              style={[
-                styles.alertType,
-                {
-                  color: alert.color,
-                },
-              ]}
-            >
-              {alert.type}
-            </Text>
-          </View>
+                <Text
+                  style={[
+                    styles.alertType,
+                    {
+                      color: alert.color,
+                    },
+                  ]}
+                >
+                  {alert.type}
+                </Text>
+              </View>
 
-          <Ionicons
-            name="chevron-forward"
-            size={20}
-            color="#999"
-          />
-        </TouchableOpacity>
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color="#999"
+              />
+            </TouchableOpacity>
+          </HoverCard>
+        </AnimatedEntrance>
       ))}
     </ScrollView>
   );
@@ -173,11 +186,10 @@ export default function AlertsDashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F7FA",
+    backgroundColor: "#EEF5FA",
   },
 
   header: {
-    backgroundColor: "#C8102E",
     paddingTop: 55,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -185,6 +197,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    borderBottomLeftRadius: 26,
+    borderBottomRightRadius: 26,
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 17,
+    elevation: 8,
   },
 
   headerTitle: {
@@ -193,18 +212,28 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
+  summaryWrap: {
+    margin: 18,
+    borderRadius: 21,
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 9 },
+    shadowOpacity: 0.09,
+    shadowRadius: 15,
+    elevation: 4,
+  },
+
   summaryCard: {
     backgroundColor: "#FFF",
-    margin: 20,
-    borderRadius: 18,
+    borderRadius: 21,
     padding: 25,
     alignItems: "center",
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: "#E0EAF2",
   },
 
   summaryTitle: {
     fontSize: 16,
-    color: "#666",
+    color: "#64788C",
   },
 
   summaryCount: {
@@ -215,21 +244,27 @@ const styles = StyleSheet.create({
   },
 
   summaryText: {
-    color: "#999",
+    color: "#718297",
+  },
+
+  alertWrap: {
+    marginHorizontal: 18,
+    marginBottom: 11,
   },
 
   alertCard: {
-    backgroundColor: "#FFF",
-    marginHorizontal: 20,
-    marginBottom: 15,
-
-    borderRadius: 16,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 19,
     padding: 16,
-
     flexDirection: "row",
     alignItems: "center",
-
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#E0EAF2",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 3,
   },
 
   iconContainer: {
@@ -250,11 +285,11 @@ const styles = StyleSheet.create({
   alertTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#222",
+    color: "#172033",
   },
 
   alertDesc: {
-    color: "#666",
+    color: "#64788C",
     marginTop: 4,
   },
 

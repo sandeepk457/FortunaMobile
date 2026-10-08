@@ -6,21 +6,33 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        animation: "shift",
+        transitionSpec: {
+          animation: "timing",
+          config: { duration: 280 },
+        },
 
         tabBarStyle: {
-          height: 75,
-          borderTopWidth: 0,
-          backgroundColor: "#FFFFFF",
-          elevation: 10,
+          height: 82,
+          paddingTop: 8,
+          paddingBottom: 8,
+          borderTopWidth: 1,
+          borderTopColor: "#D8E6F0",
+          backgroundColor: "#F8FBFD",
+          elevation: 16,
+          shadowColor: "#005F99",
+          shadowOffset: { width: 0, height: -6 },
+          shadowOpacity: 0.1,
+          shadowRadius: 16,
         },
 
         tabBarActiveTintColor: "#C8102E",
         tabBarInactiveTintColor: "#005F99",
 
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "600",
-          marginBottom: 6,
+          fontSize: 11,
+          fontWeight: "700",
+          marginBottom: 2,
         },
       }}
     >
@@ -30,9 +42,9 @@ export default function TabLayout() {
         options={{
           title: "Home",
 
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name="home"
+              name={focused ? "home" : "home-outline"}
               size={size}
               color={color}
             />
@@ -45,9 +57,9 @@ export default function TabLayout() {
         options={{
           title: "Tasks",
 
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name="clipboard"
+              name={focused ? "clipboard" : "clipboard-outline"}
               size={size}
               color={color}
             />
@@ -83,9 +95,9 @@ export default function TabLayout() {
         options={{
           title: "Reports",
 
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name="stats-chart"
+              name={focused ? "stats-chart" : "stats-chart-outline"}
               size={size}
               color={color}
             />
@@ -98,9 +110,9 @@ export default function TabLayout() {
         options={{
           title: "Settings",
 
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name="settings"
+              name={focused ? "settings" : "settings-outline"}
               size={size}
               color={color}
             />

@@ -7,6 +7,7 @@ import {
 
 import { COLORS } from "@/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface Props {
   title: string;
@@ -16,7 +17,12 @@ export default function AppHeader({
   title,
 }: Props) {
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={[COLORS.primary, "#A90D27", COLORS.secondary]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.container}
+    >
       <TouchableOpacity>
         <Ionicons
           name="menu"
@@ -38,24 +44,25 @@ export default function AppHeader({
 
         <View style={styles.badge} />
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     height: 65,
-    backgroundColor: COLORS.secondary,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
 
     paddingHorizontal: 18,
 
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: COLORS.secondary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
     elevation: 8,
   },
 
