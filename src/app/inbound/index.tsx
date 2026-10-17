@@ -355,22 +355,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 
-  kpiValue: {
-    fontSize: 28,
-
-    fontWeight: "700",
-
-    color: "#C8102E",
-  },
-
-  kpiLabel: {
-    marginTop: 5,
-
-    color: "#666",
-
-    textAlign: "center",
-  },
-
   sectionTitle: {
     fontSize: 18,
 

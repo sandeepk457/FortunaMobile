@@ -19,6 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 
+import { getStoredSession, loginWithCredentials } from "@/services/auth";
+
 const BRAND_RED = "#C8102E";
 const BRAND_BLUE = "#005F99";
 const INK = "#172033";
@@ -40,6 +42,24 @@ export default function LoginScreen() {
   const [cardAnim] = useState(() => new Animated.Value(0));
   const [orbitAnim] = useState(() => new Animated.Value(0));
   const [shineAnim] = useState(() => new Animated.Value(0));
+
+  useEffect(() => {
+    let active = true;
+
+    async function checkExistingSession() {
+      const session = await getStoredSession();
+
+      if (active && session) {
+        router.replace("/dashboard");
+      }
+    }
+
+    checkExistingSession();
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
 
   useEffect(() => {
     const animation = Animated.parallel([
@@ -102,7 +122,8 @@ export default function LoginScreen() {
     try {
       setError("");
 
-      if (!email.trim()) {
+      const trimmedEmail = email.trim();
+      if (!trimmedEmail) {
         setError("Email is required");
         return;
       }
@@ -114,44 +135,12 @@ export default function LoginScreen() {
 
       setLoading(true);
 
-      const response = await fetch(
-        "https://fortuna-sims-backend.onrender.com/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        },
-      );
-
-      console.log("STATUS:", response.status);
-      if (!response.ok) {
-        throw new Error("Server Error");
-      }
-
-      const data = await response.json();
-
-      console.log("LOGIN DATA:", data);
-
-      if (data.success) {
-        console.log("Logged User", data.user);
-
-        await AsyncStorage.setItem("loggedUser", JSON.stringify(data.user));
-
-        await AsyncStorage.setItem("isLoggedIn", "true");
-
-        router.replace("/dashboard");
-      } else {
-        setError(data.message);
-      }
+      const session = await loginWithCredentials(trimmedEmail, password);
+      await AsyncStorage.setItem("loggedUser", JSON.stringify(session.user));
+      router.replace("/dashboard");
     } catch (err) {
-      console.log(err);
-
-      setError("Unable to connect server");
+      const message = err instanceof Error ? err.message : "Unable to connect to the server";
+      setError(message);
     } finally {
       setLoading(false);
     }

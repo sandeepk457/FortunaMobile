@@ -1,4 +1,5 @@
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 
 import {
     FlatList,
@@ -44,11 +45,32 @@ const warehouses = [
   },
 ];
 
+const SELECTED_WAREHOUSE_KEY = "selectedWarehouse";
+
 export default function WarehouseSelectionScreen() {
   const [selectedWarehouse, setSelectedWarehouse] =
     useState<string | null>(null);
 
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadWarehouse() {
+      const warehouse = await AsyncStorage.getItem(SELECTED_WAREHOUSE_KEY);
+
+      if (active && warehouse) {
+        const parsedWarehouse = JSON.parse(warehouse);
+        setSelectedWarehouse(parsedWarehouse.id || parsedWarehouse.code || null);
+      }
+    }
+
+    loadWarehouse();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const filteredWarehouses = warehouses.filter(
     (item) =>
@@ -191,11 +213,19 @@ export default function WarehouseSelectionScreen() {
           !selectedWarehouse &&
             styles.disabledButton,
         ]}
-        onPress={() =>
-          router.push(
-            "/dashboard/shift-login"
-          )
-        }
+        onPress={async () => {
+          if (!selectedWarehouse) {
+            return;
+          }
+
+          const warehouse = warehouses.find((item) => item.id === selectedWarehouse);
+
+          if (warehouse) {
+            await AsyncStorage.setItem(SELECTED_WAREHOUSE_KEY, JSON.stringify(warehouse));
+          }
+
+          router.push("/dashboard/shift-login");
+        }}
       >
         <Text style={styles.continueText}>
           Continue

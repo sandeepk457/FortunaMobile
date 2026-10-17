@@ -12,12 +12,16 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect, useRouter } from "expo-router";
+
 import HoverCard from "@/components/ui/HoverCard";
+import { logout } from "@/services/auth";
 
 
 
 export default function DashboardScreen() {
   const [userName, setUserName] = useState("");
+  const [warehouseLabel, setWarehouseLabel] = useState("HYD-01");
+  const [shiftLabel, setShiftLabel] = useState("Shift A");
   const loadUser = useCallback(async () => {
     try {
       const storedUser = await AsyncStorage.getItem("loggedUser");
@@ -25,6 +29,17 @@ export default function DashboardScreen() {
       if (storedUser) {
         const user = JSON.parse(storedUser);
         setUserName(user.name || user.full_name || "");
+      }
+
+      const storedWarehouse = await AsyncStorage.getItem("selectedWarehouse");
+      if (storedWarehouse) {
+        const parsedWarehouse = JSON.parse(storedWarehouse);
+        setWarehouseLabel(parsedWarehouse.code || parsedWarehouse.name || "HYD-01");
+      }
+
+      const storedShift = await AsyncStorage.getItem("selectedShift");
+      if (storedShift) {
+        setShiftLabel(JSON.parse(storedShift));
       }
     } catch (err) {
       console.log("User Load Error", err);
@@ -34,15 +49,16 @@ export default function DashboardScreen() {
   useFocusEffect(
     useCallback(() => {
       loadUser();
-    }, [loadUser])
+    }, [loadUser]),
   );
 
-const [showMenu, setShowMenu] = useState(false);
-const router = useRouter();
-const [warehouseOpen, setWarehouseOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
+  const go = (route: string) => router.push(route as never);
+  const [warehouseOpen, setWarehouseOpen] = useState(false);
 
-const [operationsOpen, setOperationsOpen] = useState(false);
-const [pageAnim] = useState(() => new Animated.Value(0));
+  const [operationsOpen, setOperationsOpen] = useState(false);
+  const [pageAnim] = useState(() => new Animated.Value(0));
 
 useEffect(() => {
   const animation = Animated.timing(pageAnim, {
@@ -85,8 +101,8 @@ useEffect(() => {
         {/* NOTIFICATION */}
          <TouchableOpacity
     onPress={() =>
-      router.push(
-        "/dashboard/alerts-dashboard"
+      go(
+        "/notifications"
       )
     }
   >
@@ -244,7 +260,7 @@ useEffect(() => {
       style={styles.subMenu}
       onPress={() => {
         setShowMenu(false);
-        router.push("/outbound");
+        go("/outbound");
       }}
     >
       <Text style={styles.subMenuText}>
@@ -256,7 +272,7 @@ useEffect(() => {
       style={styles.subMenu}
       onPress={() => {
         setShowMenu(false);
-        router.push("/transfer");
+        go("/transfer");
       }}
     >
       <Text style={styles.subMenuText}>
@@ -268,7 +284,7 @@ useEffect(() => {
       style={styles.subMenu}
       onPress={() => {
         setShowMenu(false);
-        router.push("/cyclecount");
+        go("/cyclecount");
       }}
     >
       <Text style={styles.subMenuText}>
@@ -293,15 +309,42 @@ useEffect(() => {
   </Text>
 </TouchableOpacity>
 
-      <TouchableOpacity style={styles.menuItem}>
-        <Text style={styles.menuText}>⚙ Settings</Text>
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => {
+          setShowMenu(false);
+          go("/inventory");
+        }}
+      >
+        <Text style={styles.menuText}>Inventory Lookup</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => {
+          setShowMenu(false);
+          go("/sync");
+        }}
+      >
+        <Text style={styles.menuText}>Offline Sync</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => {
+          setShowMenu(false);
+          router.push("/settings");
+        }}
+      >
+        <Text style={styles.menuText}>Settings</Text>
       </TouchableOpacity>
 
       <View style={styles.logoutContainer}>
    <TouchableOpacity
   style={styles.logoutButton}
-  onPress={() => {
+  onPress={async () => {
     setShowMenu(false);
+    await logout();
     router.replace("/auth/login");
   }}
 >
@@ -348,7 +391,7 @@ useEffect(() => {
           </Text>
 
           <Text style={styles.warehouseText}>
-            Warehouse: HYD-01
+            Warehouse: {warehouseLabel} · {shiftLabel}
           </Text>
 
           <View style={styles.onlineRow}>
@@ -407,6 +450,7 @@ useEffect(() => {
                 styles.kpiCard,
                 styles.outboundCard,
               ]}
+              onPress={() => go("/outbound")}
             >
 
             <View style={styles.iconCircle}>
@@ -435,6 +479,7 @@ useEffect(() => {
                 styles.kpiCard,
                 styles.transferCard,
               ]}
+              onPress={() => go("/transfer")}
             >
 
             <View style={styles.iconCircle}>
@@ -463,6 +508,7 @@ useEffect(() => {
                 styles.kpiCard,
                 styles.countCard,
               ]}
+              onPress={() => go("/cyclecount")}
             >
 
             <View style={styles.iconCircle}>
@@ -493,7 +539,7 @@ useEffect(() => {
 
         {/* TASK CARD */}
         <HoverCard style={styles.taskHover}>
-          <TouchableOpacity style={styles.taskCard}>
+          <TouchableOpacity style={styles.taskCard} onPress={() => go("/inbound/putaway-confirmation")}>
 
           <View>
             <Text style={styles.taskTitle}>
@@ -518,7 +564,7 @@ useEffect(() => {
 
         {/* TASK CARD */}
         <HoverCard style={styles.taskHover}>
-          <TouchableOpacity style={styles.taskCard}>
+          <TouchableOpacity style={styles.taskCard} onPress={() => go("/outbound")}>
 
           <View>
             <Text style={styles.taskTitle}>
@@ -543,7 +589,7 @@ useEffect(() => {
 
         {/* TASK CARD */}
         <HoverCard style={styles.taskHover}>
-          <TouchableOpacity style={styles.taskCard}>
+          <TouchableOpacity style={styles.taskCard} onPress={() => go("/outbound/packing-dispatch")}>
 
           <View>
             <Text style={styles.taskTitle}>

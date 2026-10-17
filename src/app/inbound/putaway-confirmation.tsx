@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 
 export default function PutawayConfirmationScreen() {
   const router = useRouter();
+  const go = (route: string) => router.push(route as never);
 
   const [searchBin, setSearchBin] =
     useState("");
@@ -318,16 +319,12 @@ const filteredItems = items.filter(
         {/* Confirm */}
         <TouchableOpacity
           style={styles.confirmButton}
-          onPress={() =>
-            alert(
-              "Putaway Confirmed"
-            )
-          }
+          onPress={() => go("/inbound/overflow-handling")}
         >
           <Text
             style={styles.buttonText}
           >
-            CONFIRM PUTAWAY
+            SCAN / CONFIRM PUTAWAY
           </Text>
         </TouchableOpacity>
 
@@ -335,8 +332,8 @@ const filteredItems = items.filter(
         <TouchableOpacity
           style={styles.completeButton}
           onPress={() =>
-            router.push(
-              "/inbound"
+            go(
+              "/inbound/inbound-completion"
             )
           }
         >

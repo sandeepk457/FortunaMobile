@@ -1,8 +1,38 @@
 import "react-native-gesture-handler";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePathname, useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
+import { useEffect } from "react";
+
+const PUBLIC_PATHS = ["/", "/auth/login", "/auth/forgot-password"];
 
 export default function RootLayout() {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    let active = true;
+
+    async function enforceSession() {
+      const hasSession = Boolean(await AsyncStorage.getItem("fortuna_session"));
+
+      if (!active) {
+        return;
+      }
+
+      if (!hasSession && !PUBLIC_PATHS.includes(pathname)) {
+        router.replace("/auth/login");
+      }
+    }
+
+    enforceSession();
+
+    return () => {
+      active = false;
+    };
+  }, [pathname, router]);
+
   return (
     <Drawer
       screenOptions={{

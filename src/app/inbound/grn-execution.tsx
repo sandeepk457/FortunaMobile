@@ -412,12 +412,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  summaryText: {
-    fontSize: 15,
-
-    marginBottom: 5,
-  },
-
   saveButton: {
     backgroundColor: "#005F99",
 
@@ -493,20 +487,6 @@ itemName: {
   color: "#666",
 
   marginBottom: 10,
-},
-
-qtySummaryCard: {
-  backgroundColor: "#F8FAFC",
-
-  padding: 12,
-
-  borderRadius: 12,
-
-  marginTop: 10,
-
-  borderWidth: 1,
-
-  borderColor: "#E5E7EB",
 },
 
 summaryText: {

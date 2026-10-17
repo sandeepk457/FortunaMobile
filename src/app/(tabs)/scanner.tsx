@@ -16,6 +16,7 @@ import HoverCard from "@/components/ui/HoverCard";
 
 export default function ScannerScreen() {
   const router = useRouter();
+  const go = (route: string) => router.push(route as never);
   const [sweep] = useState(() => new Animated.Value(0));
   const [pulse] = useState(() => new Animated.Value(0));
 
@@ -104,6 +105,54 @@ export default function ScannerScreen() {
               <View style={styles.actionCopy}>
                 <Text style={styles.actionTitle}>Inbound operations</Text>
                 <Text style={styles.actionCaption}>Browse available receiving and scan flows</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#7B8C9C" />
+            </TouchableOpacity>
+          </HoverCard>
+          <HoverCard>
+            <TouchableOpacity activeOpacity={0.82} style={styles.actionCard} onPress={() => go("/outbound/pick-scan")}>
+              <LinearGradient colors={["#005F99", "#C8102E"]} style={styles.actionIcon}>
+                <Ionicons name="cart-outline" size={23} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={styles.actionCopy}>
+                <Text style={styles.actionTitle}>Outbound pick</Text>
+                <Text style={styles.actionCaption}>Validate bin, SKU and allocated quantity</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#7B8C9C" />
+            </TouchableOpacity>
+          </HoverCard>
+          <HoverCard>
+            <TouchableOpacity activeOpacity={0.82} style={styles.actionCard} onPress={() => go("/transfer/dispatch")}>
+              <LinearGradient colors={["#16A34A", "#005F99"]} style={styles.actionIcon}>
+                <Ionicons name="swap-horizontal-outline" size={23} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={styles.actionCopy}>
+                <Text style={styles.actionTitle}>Transfer scan</Text>
+                <Text style={styles.actionCaption}>Scan transfer LPN and source bin</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#7B8C9C" />
+            </TouchableOpacity>
+          </HoverCard>
+          <HoverCard>
+            <TouchableOpacity activeOpacity={0.82} style={styles.actionCard} onPress={() => go("/cyclecount/blind-count")}>
+              <LinearGradient colors={["#C8102E", "#B7791F"]} style={styles.actionIcon}>
+                <Ionicons name="eye-off-outline" size={23} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={styles.actionCopy}>
+                <Text style={styles.actionTitle}>Blind count</Text>
+                <Text style={styles.actionCaption}>Scan bin or SKU for physical count</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#7B8C9C" />
+            </TouchableOpacity>
+          </HoverCard>
+          <HoverCard>
+            <TouchableOpacity activeOpacity={0.82} style={styles.actionCard} onPress={() => go("/inventory")}>
+              <LinearGradient colors={["#005F99", "#16A34A"]} style={styles.actionIcon}>
+                <Ionicons name="search-outline" size={23} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={styles.actionCopy}>
+                <Text style={styles.actionTitle}>Inventory lookup</Text>
+                <Text style={styles.actionCaption}>Read-only SKU, batch, LPN or bin lookup</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color="#7B8C9C" />
             </TouchableOpacity>

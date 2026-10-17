@@ -9,10 +9,14 @@ const settings = [
   { title: "Warehouse", description: "Choose your active location", icon: "business-outline" as const, route: "/dashboard/warehouse-selection" as const, color: "#005F99" },
   { title: "Shift login", description: "Select or update your shift", icon: "time-outline" as const, route: "/dashboard/shift-login" as const, color: "#C8102E" },
   { title: "Device binding", description: "Manage this registered device", icon: "phone-portrait-outline" as const, route: "/dashboard/device-binding" as const, color: "#005F99" },
+  { title: "Inventory lookup", description: "Search SKU, batch, LPN or bin stock", icon: "search-outline" as const, route: "/inventory" as const, color: "#16A34A" },
+  { title: "Offline sync", description: "Review queued work and conflicts", icon: "cloud-upload-outline" as const, route: "/sync" as const, color: "#B7791F" },
+  { title: "Notifications", description: "Open operational alerts", icon: "notifications-outline" as const, route: "/notifications" as const, color: "#C8102E" },
 ];
 
 export default function SettingsScreen() {
   const router = useRouter();
+  const go = (route: string) => router.push(route as never);
 
   return (
     <View style={styles.container}>
@@ -46,7 +50,7 @@ export default function SettingsScreen() {
           {settings.map((item, index) => (
             <AnimatedEntrance key={item.title} delay={220 + index * 75}>
               <HoverCard>
-                <TouchableOpacity activeOpacity={0.82} style={styles.settingCard} onPress={() => router.push(item.route)}>
+                <TouchableOpacity activeOpacity={0.82} style={styles.settingCard} onPress={() => go(item.route)}>
                   <View style={[styles.settingIcon, { backgroundColor: `${item.color}14` }]}>
                     <Ionicons name={item.icon} size={21} color={item.color} />
                   </View>
