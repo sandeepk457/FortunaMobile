@@ -127,7 +127,7 @@ export default function ItemScanScreen() {
           style={styles.nextButton}
           onPress={() =>
             router.push(
-              "/inbound/quantity-confirmation"
+              "/inbound/quantity-confirmation" as never
             )
           }
         >

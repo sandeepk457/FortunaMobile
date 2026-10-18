@@ -1,4 +1,5 @@
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 
 import {
     ScrollView,
@@ -11,11 +12,39 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
+const SHIFT_KEY = "selectedShift";
+const WAREHOUSE_KEY = "selectedWarehouse";
+
 export default function ShiftLoginScreen() {
   const router = useRouter();
 
   const [selectedShift, setSelectedShift] =
     useState("General");
+  const [warehouseLabel, setWarehouseLabel] = useState("HYD-01");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadShift() {
+      const shift = await AsyncStorage.getItem(SHIFT_KEY);
+      const warehouse = await AsyncStorage.getItem(WAREHOUSE_KEY);
+
+      if (active && shift) {
+        setSelectedShift(JSON.parse(shift));
+      }
+
+      if (active && warehouse) {
+        const parsed = JSON.parse(warehouse);
+        setWarehouseLabel(parsed.code || parsed.name || "HYD-01");
+      }
+    }
+
+    loadShift();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <ScrollView
@@ -78,7 +107,7 @@ export default function ShiftLoginScreen() {
           </Text>
 
           <Text style={styles.value}>
-            HYD-01
+            {warehouseLabel}
           </Text>
         </View>
 
@@ -137,9 +166,10 @@ export default function ShiftLoginScreen() {
 
         <TouchableOpacity
           style={styles.startButton}
-          onPress={() =>
-            router.replace("/dashboard")
-          }
+          onPress={async () => {
+            await AsyncStorage.setItem(SHIFT_KEY, JSON.stringify(selectedShift));
+            router.replace("/dashboard");
+          }}
         >
           <Text style={styles.buttonText}>
             START SHIFT

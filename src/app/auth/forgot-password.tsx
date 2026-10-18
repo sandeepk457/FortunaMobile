@@ -13,7 +13,9 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -54,7 +56,7 @@ export default function ForgotPasswordScreen() {
         </TouchableOpacity>
 
         {/* LOGO */}
-        <View style={styles.logoContainer}>
+        <AnimatedEntrance style={styles.logoContainer}>
           <Image
             source={require("../../../assets/images/sims-logo.png")}
             style={styles.logo}
@@ -69,10 +71,14 @@ export default function ForgotPasswordScreen() {
             Enter your username to reset
             your password
           </Text>
-        </View>
+        </AnimatedEntrance>
 
         {/* CARD */}
-        <View style={styles.card}>
+        <AnimatedEntrance delay={100}>
+        <LinearGradient
+          colors={["#FFFFFF", "#F7FAFD", "#EEF5FA"]}
+          style={styles.card}
+        >
 
           <Text style={styles.label}>
             Username
@@ -98,11 +104,15 @@ export default function ForgotPasswordScreen() {
             style={styles.resetButton}
             onPress={handleReset}
           >
-            <Text
-              style={styles.resetButtonText}
+            <LinearGradient
+              colors={["#C8102E", "#B50E29", "#005F99"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.resetGradient}
             >
-              RESET PASSWORD
-            </Text>
+              <Text style={styles.resetButtonText}>RESET PASSWORD</Text>
+              <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+            </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -116,7 +126,8 @@ export default function ForgotPasswordScreen() {
             </Text>
           </TouchableOpacity>
 
-        </View>
+        </LinearGradient>
+        </AnimatedEntrance>
 
         {/* FOOTER */}
         <View style={styles.footer}>
@@ -139,13 +150,14 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: "#F4F7FB",
+    backgroundColor: "#EEF5FA",
   },
 
   scrollContainer: {
     flexGrow: 1,
     justifyContent: "center",
-    padding: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 28,
   },
 
   backButton: {
@@ -177,23 +189,21 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#FFFFFF",
-
     borderRadius: 24,
-
     padding: 24,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-
-    elevation: 5,
+    borderWidth: 1,
+    borderColor: "#FFFFFF",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.14,
+    shadowRadius: 22,
+    elevation: 8,
   },
 
   label: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#333",
+    color: "#172033",
 
     marginBottom: 8,
   },
@@ -203,15 +213,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     borderWidth: 1,
-    borderColor: "#D6E0EA",
+    borderColor: "#D4E1EC",
 
-    borderRadius: 14,
+    borderRadius: 17,
 
     paddingHorizontal: 14,
 
     height: 56,
 
-    backgroundColor: "#FFF",
+    backgroundColor: "#FFFFFF",
 
     marginBottom: 20,
   },
@@ -226,14 +236,22 @@ const styles = StyleSheet.create({
   },
 
   resetButton: {
-    backgroundColor: "#C8102E",
+    height: 58,
+    borderRadius: 17,
+    overflow: "hidden",
+    shadowColor: "#C8102E",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+    elevation: 6,
+  },
 
-    height: 56,
-
-    borderRadius: 14,
-
-    justifyContent: "center",
+  resetGradient: {
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
 
   resetButtonText: {

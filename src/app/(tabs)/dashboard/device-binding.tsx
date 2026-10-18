@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -11,10 +11,29 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
+const DEVICE_BINDING_KEY = "deviceBinding";
+
 export default function DeviceBindingScreen() {
   const router = useRouter();
 
   const [isBound, setIsBound] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadBinding() {
+      const binding = await AsyncStorage.getItem(DEVICE_BINDING_KEY);
+      if (active && binding) {
+        setIsBound(JSON.parse(binding).bound === true);
+      }
+    }
+
+    loadBinding();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <ScrollView
@@ -127,9 +146,11 @@ export default function DeviceBindingScreen() {
         {/* BUTTON */}
         <TouchableOpacity
           style={styles.bindButton}
-          onPress={() =>
-            setIsBound(true)
-          }
+          onPress={async () => {
+            const nextValue = !isBound;
+            setIsBound(nextValue);
+            await AsyncStorage.setItem(DEVICE_BINDING_KEY, JSON.stringify({ bound: nextValue }));
+          }}
         >
           <Text style={styles.buttonText}>
             {isBound

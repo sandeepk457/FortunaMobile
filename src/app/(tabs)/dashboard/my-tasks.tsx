@@ -8,7 +8,10 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
+import HoverCard from "@/components/ui/HoverCard";
 
 export default function MyTasksScreen() {
   const router = useRouter();
@@ -32,14 +35,14 @@ export default function MyTasksScreen() {
       id: 3,
       title: "Dispatch Queue",
       count: 5,
-      color: "#F59E0B",
+      color: "#005F99",
       icon: "car-outline",
     },
     {
       id: 4,
       title: "Cycle Count",
       count: 3,
-      color: "#16A34A",
+      color: "#C8102E",
       icon: "clipboard-outline",
     },
   ];
@@ -52,7 +55,12 @@ export default function MyTasksScreen() {
       }}
     >
       {/* HEADER */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={["#C8102E", "#A90D27", "#005F99"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <TouchableOpacity
           onPress={() => router.back()}
         >
@@ -68,81 +76,90 @@ export default function MyTasksScreen() {
         </Text>
 
         <View style={{ width: 24 }} />
-      </View>
+      </LinearGradient>
 
       {/* SUMMARY */}
-      <View style={styles.summaryCard}>
-        <Text style={styles.summaryTitle}>
-          Assigned Tasks
-        </Text>
+      <AnimatedEntrance delay={80} style={styles.summaryWrap}>
+        <HoverCard>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryTitle}>
+              Assigned Tasks
+            </Text>
 
-        <Text style={styles.summaryCount}>
-          30
-        </Text>
+            <Text style={styles.summaryCount}>
+              30
+            </Text>
 
-        <Text style={styles.summaryText}>
-          Total Open Tasks
-        </Text>
-      </View>
+            <Text style={styles.summaryText}>
+              Total Open Tasks
+            </Text>
+          </View>
+        </HoverCard>
+      </AnimatedEntrance>
 
       {/* TASK LIST */}
-      {tasks.map((task) => (
-        <TouchableOpacity
-          key={task.id}
-          style={styles.taskCard}
-        >
-          <View
-            style={[
-              styles.iconContainer,
-              {
-                backgroundColor:
-                  task.color,
-              },
-            ]}
-          >
-            <Ionicons
-              name={task.icon as any}
-              size={24}
-              color="#FFF"
-            />
-          </View>
+      {tasks.map((task, index) => (
+        <AnimatedEntrance key={task.id} delay={140 + index * 70} style={styles.taskWrap}>
+          <HoverCard>
+            <TouchableOpacity activeOpacity={0.82} style={styles.taskCard}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  {
+                    backgroundColor:
+                      task.color,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name={task.icon as any}
+                  size={24}
+                  color="#FFF"
+                />
+              </View>
 
-          <View style={styles.taskInfo}>
-            <Text style={styles.taskTitle}>
-              {task.title}
-            </Text>
+              <View style={styles.taskInfo}>
+                <Text style={styles.taskTitle}>
+                  {task.title}
+                </Text>
 
-            <Text style={styles.taskCount}>
-              {task.count} Tasks Pending
-            </Text>
-          </View>
+                <Text style={styles.taskCount}>
+                  {task.count} Tasks Pending
+                </Text>
+              </View>
 
-          <Ionicons
-            name="chevron-forward"
-            size={22}
-            color="#999"
-          />
-        </TouchableOpacity>
+              <Ionicons
+                name="chevron-forward"
+                size={22}
+                color="#999"
+              />
+            </TouchableOpacity>
+          </HoverCard>
+        </AnimatedEntrance>
       ))}
 
       {/* RECENT ACTIVITY */}
-      <View style={styles.activityCard}>
-        <Text style={styles.activityTitle}>
-          Recent Activity
-        </Text>
+      <AnimatedEntrance delay={450} style={styles.activityWrap}>
+        <HoverCard>
+          <View style={styles.activityCard}>
+            <Text style={styles.activityTitle}>
+              Recent Activity
+            </Text>
 
-        <Text style={styles.activityText}>
-          ✓ Putaway Task Completed
-        </Text>
+            <Text style={styles.activityText}>
+              ✓ Putaway Task Completed
+            </Text>
 
-        <Text style={styles.activityText}>
-          ✓ Picking Order #10045
-        </Text>
+            <Text style={styles.activityText}>
+              ✓ Picking Order #10045
+            </Text>
 
-        <Text style={styles.activityText}>
-          ✓ Dispatch Vehicle AP39XX1234
-        </Text>
-      </View>
+            <Text style={styles.activityText}>
+              ✓ Dispatch Vehicle AP39XX1234
+            </Text>
+          </View>
+        </HoverCard>
+      </AnimatedEntrance>
     </ScrollView>
   );
 }
@@ -151,11 +168,10 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: "#F5F7FA",
+    backgroundColor: "#EEF5FA",
   },
 
   header: {
-    backgroundColor: "#C8102E",
     paddingTop: 55,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -163,26 +179,44 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    borderBottomLeftRadius: 26,
+    borderBottomRightRadius: 26,
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 17,
+    elevation: 8,
   },
 
   headerTitle: {
-    color: "#FFF",
+    color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "700",
   },
 
+  summaryWrap: {
+    marginHorizontal: 20,
+    marginTop: 18,
+    borderRadius: 22,
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+
   summaryCard: {
     backgroundColor: "#FFFFFF",
-    margin: 20,
-    borderRadius: 18,
+    borderRadius: 22,
     padding: 25,
     alignItems: "center",
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: "#DFEAF2",
   },
 
   summaryTitle: {
     fontSize: 16,
-    color: "#666",
+    color: "#64788C",
   },
 
   summaryCount: {
@@ -193,22 +227,27 @@ const styles = StyleSheet.create({
   },
 
   summaryText: {
-    color: "#999",
+    color: "#718297",
+  },
+
+  taskWrap: {
+    marginHorizontal: 20,
+    marginBottom: 12,
   },
 
   taskCard: {
-    backgroundColor: "#FFF",
-    marginHorizontal: 20,
-    marginBottom: 15,
-
+    backgroundColor: "#FFFFFF",
     padding: 16,
-
-    borderRadius: 16,
-
+    borderRadius: 19,
     flexDirection: "row",
     alignItems: "center",
-
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#E0EAF2",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 3,
   },
 
   iconContainer: {
@@ -229,19 +268,30 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#333",
+    color: "#172033",
   },
 
   taskCount: {
-    color: "#666",
+    color: "#718297",
     marginTop: 4,
   },
 
+  activityWrap: {
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+
   activityCard: {
-    backgroundColor: "#FFF",
-    margin: 20,
-    borderRadius: 18,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
     padding: 20,
+    borderWidth: 1,
+    borderColor: "#E0EAF2",
+    shadowColor: "#005F99",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 2,
   },
 
   activityTitle: {
@@ -253,7 +303,7 @@ const styles = StyleSheet.create({
 
   activityText: {
     marginBottom: 10,
-    color: "#444",
+    color: "#52667B",
   },
 
 });
