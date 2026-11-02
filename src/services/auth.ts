@@ -35,17 +35,7 @@ type LoginResponse = {
   user?: AuthUser;
 };
 
-type LoginResponse = {
-  success?: boolean;
-  message?: string;
-  token?: string;
-  accessToken?: string;
-  data?: {
-    token?: string;
-    user?: AuthUser;
-  };
-  user?: AuthUser;
-};
+
 
 export async function getStoredSession(): Promise<AuthSession | null> {
   const stored = await AsyncStorage.getItem(SESSION_KEY);
@@ -97,11 +87,6 @@ export async function loginWithCredentials(
     ...user,
     name: user.name ?? user.full_name ?? "Operator",
     email: user.email ?? email,
-  };
-
-  const session: AuthSession = {
-    token,
-    user: normalizedUser,
   };
 
   const session: AuthSession = {
