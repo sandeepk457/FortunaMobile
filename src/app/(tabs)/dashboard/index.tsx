@@ -84,7 +84,7 @@ useEffect(() => {
         {/* MENU ICON */}
        <TouchableOpacity
   style={styles.menuBtn}
-  onPress={() => setShowMenu(!showMenu)}
+      onPress={() => setShowMenu(!showMenu)}
 >
   <Ionicons
     name="menu"
@@ -95,7 +95,7 @@ useEffect(() => {
 
         {/* TITLE */}
         <Text style={styles.headerTitle}>
-          Fortuna SIMS
+          Fortuna SIMS Mobile
         </Text>
 
         {/* NOTIFICATION */}

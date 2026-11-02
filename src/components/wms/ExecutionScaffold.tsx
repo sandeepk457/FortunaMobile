@@ -319,7 +319,7 @@ export function DataCard({
   accent = BRAND_BLUE,
 }: {
   title: string;
-  rows: Array<{ label: string; value: string; tone?: string }>;
+  rows: { label: string; value: string; tone?: string }[];
   accent?: string;
 }) {
   return (
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: 1.6,
   },
-  title: { marginTop: 6, color: "#FFFFFF", fontSize: 31, fontWeight: "900" },
+  title: { marginTop: 6, color: "#FFFFFF", fontSize: 28, lineHeight: 36, fontWeight: "900" },
   subtitle: {
     marginTop: 9,
     color: "rgba(255,255,255,0.84)",
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 12,
-    marginTop: -34,
+    marginTop: 18,
     paddingHorizontal: 18,
   },
   metricWrap: { width: "48%" },

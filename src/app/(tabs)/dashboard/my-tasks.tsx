@@ -23,6 +23,7 @@ export default function MyTasksScreen() {
       count: 14,
       color: "#C8102E",
       icon: "cube-outline",
+      route: "/inbound/putaway-confirmation",
     },
     {
       id: 2,
@@ -30,6 +31,7 @@ export default function MyTasksScreen() {
       count: 8,
       color: "#005F99",
       icon: "cart-outline",
+      route: "/outbound",
     },
     {
       id: 3,
@@ -37,6 +39,7 @@ export default function MyTasksScreen() {
       count: 5,
       color: "#005F99",
       icon: "car-outline",
+      route: "/outbound/packing-dispatch",
     },
     {
       id: 4,
@@ -44,6 +47,7 @@ export default function MyTasksScreen() {
       count: 3,
       color: "#C8102E",
       icon: "clipboard-outline",
+      route: "/cyclecount",
     },
   ];
 
@@ -101,7 +105,7 @@ export default function MyTasksScreen() {
       {tasks.map((task, index) => (
         <AnimatedEntrance key={task.id} delay={140 + index * 70} style={styles.taskWrap}>
           <HoverCard>
-            <TouchableOpacity activeOpacity={0.82} style={styles.taskCard}>
+            <TouchableOpacity activeOpacity={0.82} style={styles.taskCard} onPress={() => router.push(task.route as never)}>
               <View
                 style={[
                   styles.iconContainer,

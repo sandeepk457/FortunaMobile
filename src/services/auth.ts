@@ -14,6 +14,7 @@ export interface AuthUser {
 
 export interface AuthSession {
   // Empty only when the existing backend does not issue a token.
+  // Empty only when the existing backend does not issue a token.
   token: string;
   user: AuthUser;
 }
@@ -21,6 +22,18 @@ export interface AuthSession {
 const SESSION_KEY = "fortuna_session";
 const LOGGED_USER_KEY = "loggedUser";
 const IS_LOGGED_IN_KEY = "isLoggedIn";
+
+type LoginResponse = {
+  success?: boolean;
+  message?: string;
+  token?: string;
+  accessToken?: string;
+  data?: {
+    token?: string;
+    user?: AuthUser;
+  };
+  user?: AuthUser;
+};
 
 type LoginResponse = {
   success?: boolean;
@@ -45,6 +58,7 @@ export async function getStoredSession(): Promise<AuthSession | null> {
     const session = JSON.parse(stored) as AuthSession;
 
     return session && session.user ? session : null;
+
   } catch {
     return null;
   }
@@ -90,7 +104,13 @@ export async function loginWithCredentials(
     user: normalizedUser,
   };
 
+  const session: AuthSession = {
+    token,
+    user: normalizedUser,
+  };
+
   await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  await AsyncStorage.setItem(LOGGED_USER_KEY, JSON.stringify(normalizedUser));
   await AsyncStorage.setItem(LOGGED_USER_KEY, JSON.stringify(normalizedUser));
   await AsyncStorage.setItem(IS_LOGGED_IN_KEY, "true");
 
