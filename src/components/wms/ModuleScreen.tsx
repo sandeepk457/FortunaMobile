@@ -104,7 +104,7 @@ export default function ModuleScreen({
   primaryRoute,
   primaryLabel = "Start execution",
   scannerLabel = "Scan validated task identity",
-  overlapMetrics = true,
+  overlapMetrics = false,
 }: ModuleScreenProps) {
   const router = useRouter();
   const [pulse] = useState(() => new Animated.Value(0));
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   eyebrow: { marginTop: 24, color: "rgba(255,255,255,0.76)", fontSize: 11, fontWeight: "900", letterSpacing: 1.7 },
-  title: { marginTop: 6, color: "#FFFFFF", fontSize: 31, fontWeight: "900" },
+  title: { marginTop: 6, color: "#FFFFFF", fontSize: 28, lineHeight: 36, fontWeight: "900" },
   subtitle: { marginTop: 9, color: "rgba(255,255,255,0.86)", fontSize: 14, lineHeight: 21, maxWidth: 340 },
   heroFooter: { marginTop: 18, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   contextPill: {
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
   pillDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#FFFFFF" },
   pillText: { color: "#FFFFFF", fontSize: 12, fontWeight: "800" },
   activeText: { flex: 1, color: "rgba(255,255,255,0.82)", fontSize: 12, fontWeight: "800", textAlign: "right" },
-  metricGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: -34, paddingHorizontal: 18 },
+  metricGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 18, paddingHorizontal: 18 },
   metricGridBelowHero: { marginTop: 18 },
   metricWrap: { width: "48%" },
   metricCard: {

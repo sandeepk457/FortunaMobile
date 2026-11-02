@@ -122,7 +122,7 @@ export default function InboundDashboardScreen() {
     </Text>
 
     <Text style={styles.kpiLabel}>
-      Today's GRN's
+      Today&apos;s GRNs
     </Text>
   </TouchableOpacity>
 </View>

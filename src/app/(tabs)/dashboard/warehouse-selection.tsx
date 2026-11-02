@@ -34,7 +34,7 @@ const warehouses = [
     code: "CHE-01",
     name: "Chennai Logistics Hub",
     location: "Chennai",
-    status: "Offline",
+    status: "Inactive",
   },
   {
     id: "4",
@@ -89,9 +89,11 @@ export default function WarehouseSelectionScreen() {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
+        disabled={item.status !== "Online"}
         style={[
           styles.card,
           selected && styles.selectedCard,
+          item.status !== "Online" && styles.inactiveCard,
         ]}
         onPress={() =>
           setSelectedWarehouse(item.id)
@@ -341,6 +343,10 @@ const styles = StyleSheet.create({
 
   selectedCard: {
     borderColor: "#005F99",
+  },
+
+  inactiveCard: {
+    opacity: 0.55,
   },
 
   cardTop: {

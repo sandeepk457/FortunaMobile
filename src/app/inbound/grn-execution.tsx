@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -48,8 +48,7 @@ const skuItems = [
   },
 ];
 
-const filteredItems = useMemo(() => {
-  return skuItems.filter(
+const filteredItems = skuItems.filter(
     (item) =>
       item.sku
         .toLowerCase()
@@ -62,7 +61,6 @@ const filteredItems = useMemo(() => {
           searchSKU.toLowerCase()
         )
   );
-}, [searchSKU]);
 
 
   const [receivedQty1, setReceivedQty1] =
@@ -70,18 +68,6 @@ const filteredItems = useMemo(() => {
 
   const [acceptedQty1, setAcceptedQty1] =
     useState("90");
-
-  const [rejectedQty1, setRejectedQty1] =
-    useState("5");
-
-  const [receivedQty2, setReceivedQty2] =
-    useState("50");
-
-  const [acceptedQty2, setAcceptedQty2] =
-    useState("50");
-
-  const [rejectedQty2, setRejectedQty2] =
-    useState("0");
 
 const orderedQty1 = 100;
 
