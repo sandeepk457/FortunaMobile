@@ -8,7 +8,6 @@ import {
     View,
 } from "react-native";
 
-import BottomNavigation from "@/components/BottomNavigation";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
@@ -283,7 +282,6 @@ const excessQty1 = Math.max(
 
       </ScrollView>
 
-      <BottomNavigation />
     </View>
   );
 }

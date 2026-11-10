@@ -59,10 +59,7 @@ const styles = StyleSheet.create({
 
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    shadowColor: COLORS.secondary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.2)",
     elevation: 8,
   },
 

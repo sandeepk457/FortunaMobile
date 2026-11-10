@@ -66,19 +66,19 @@ export default function LoginScreen() {
       Animated.timing(cardAnim, {
         toValue: 1,
         duration: 760,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== "web",
       }),
       Animated.loop(
         Animated.sequence([
           Animated.timing(floatAnim, {
             toValue: 1,
             duration: 3200,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
           Animated.timing(floatAnim, {
             toValue: 0,
             duration: 3200,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
         ]),
       ),
@@ -87,12 +87,12 @@ export default function LoginScreen() {
           Animated.timing(pulseAnim, {
             toValue: 1,
             duration: 1800,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
           Animated.timing(pulseAnim, {
             toValue: 0,
             duration: 1800,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
         ]),
       ),
@@ -101,7 +101,7 @@ export default function LoginScreen() {
           toValue: 1,
           duration: 18000,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
       ),
       Animated.loop(
@@ -109,7 +109,7 @@ export default function LoginScreen() {
           toValue: 1,
           duration: 2600,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
       ),
     ]);
@@ -203,8 +203,8 @@ export default function LoginScreen() {
 
           <View style={styles.hero}>
             <Animated.View
-              pointerEvents="none"
               style={[
+                { pointerEvents: "none" },
                 styles.orbitRing,
                 {
                   transform: [
@@ -417,8 +417,8 @@ export default function LoginScreen() {
                   style={styles.loginGradient}
                 >
                   <Animated.View
-                    pointerEvents="none"
                     style={[
+                      { pointerEvents: "none" },
                       styles.buttonShine,
                       {
                         transform: [
@@ -455,8 +455,8 @@ export default function LoginScreen() {
           {width >= 600 && (
             <>
               <Animated.View
-                pointerEvents="none"
                 style={[
+                  { pointerEvents: "none" },
                   styles.floatingPanel,
                   styles.panelLeft,
                   {
@@ -480,8 +480,8 @@ export default function LoginScreen() {
                 </View>
               </Animated.View>
               <Animated.View
-                pointerEvents="none"
                 style={[
+                  { pointerEvents: "none" },
                   styles.floatingPanel,
                   styles.panelRight,
                   {
@@ -589,10 +589,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#FFFFFF",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 18 },
-    shadowOpacity: 0.22,
-    shadowRadius: 22,
+    boxShadow: "0px 18px 22px rgba(0, 95, 153, 0.22)",
     elevation: 12,
   },
   logo: { width: 172, height: 88 },
@@ -644,10 +641,7 @@ const styles = StyleSheet.create({
     padding: 22,
     borderWidth: 1,
     borderColor: "#FFFFFF",
-    shadowColor: "#0B2740",
-    shadowOffset: { width: 0, height: 22 },
-    shadowOpacity: 0.16,
-    shadowRadius: 28,
+    boxShadow: "0px 22px 28px rgba(11, 39, 64, 0.16)",
     elevation: 14,
   },
   cardHeader: {
@@ -693,10 +687,7 @@ const styles = StyleSheet.create({
   },
   inputFocused: {
     borderColor: BRAND_BLUE,
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.12)",
     elevation: 3,
   },
   input: {
@@ -746,10 +737,7 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 18,
     overflow: "hidden",
-    shadowColor: BRAND_RED,
-    shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.24,
-    shadowRadius: 18,
+    boxShadow: "0px 14px 18px rgba(200, 16, 46, 0.24)",
     elevation: 8,
   },
   loginButtonDisabled: { opacity: 0.76 },
@@ -781,10 +769,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.88)",
     borderWidth: 1,
     borderColor: "#FFFFFF",
-    shadowColor: "#0B2740",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.16,
-    shadowRadius: 18,
+    boxShadow: "0px 12px 18px rgba(11, 39, 64, 0.16)",
     elevation: 7,
   },
   panelLeft: { top: 246, left: 2 },

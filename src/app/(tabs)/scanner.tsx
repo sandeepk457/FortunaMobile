@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import {
   Animated,
   Easing,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -23,14 +24,14 @@ export default function ScannerScreen() {
   useEffect(() => {
     const sweepAnimation = Animated.loop(
       Animated.sequence([
-        Animated.timing(sweep, { toValue: 1, duration: 2100, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-        Animated.timing(sweep, { toValue: 0, duration: 0, useNativeDriver: true }),
+        Animated.timing(sweep, { toValue: 1, duration: 2100, easing: Easing.inOut(Easing.quad), useNativeDriver: Platform.OS !== "web" }),
+        Animated.timing(sweep, { toValue: 0, duration: 0, useNativeDriver: Platform.OS !== "web" }),
       ]),
     );
     const pulseAnimation = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulse, { toValue: 1, duration: 1500, useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 0, duration: 1500, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 1, duration: 1500, useNativeDriver: Platform.OS !== "web" }),
+        Animated.timing(pulse, { toValue: 0, duration: 1500, useNativeDriver: Platform.OS !== "web" }),
       ]),
     );
     sweepAnimation.start();
@@ -73,7 +74,7 @@ export default function ScannerScreen() {
                 <View style={[styles.corner, styles.cornerBottomLeft]} />
                 <View style={[styles.corner, styles.cornerBottomRight]} />
                 <View style={styles.scanTarget}><Ionicons name="barcode-outline" size={65} color="#005F99" /></View>
-                <Animated.View pointerEvents="none" style={[styles.scanBeam, { transform: [{ translateY: sweep.interpolate({ inputRange: [0, 1], outputRange: [-74, 74] }) }] }]} />
+                <Animated.View style={[styles.scanBeam, { pointerEvents: "none", transform: [{ translateY: sweep.interpolate({ inputRange: [0, 1], outputRange: [-74, 74] }) }] }]} />
               </View>
               <View style={styles.tipRow}>
                 <Ionicons name="information-circle-outline" size={17} color="#005F99" />
@@ -166,14 +167,14 @@ export default function ScannerScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#EEF5FA" },
   content: { paddingBottom: 30 },
-  header: { paddingTop: 58, paddingHorizontal: 22, paddingBottom: 26, borderBottomLeftRadius: 30, borderBottomRightRadius: 30, shadowColor: "#005F99", shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.2, shadowRadius: 18, elevation: 8 },
+  header: { paddingTop: 58, paddingHorizontal: 22, paddingBottom: 26, borderBottomLeftRadius: 30, borderBottomRightRadius: 30, boxShadow: "0px 12px 18px rgba(0, 95, 153, 0.2)", elevation: 8 },
   eyebrow: { color: "rgba(255,255,255,0.76)", fontSize: 11, fontWeight: "800", letterSpacing: 1.8 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 5 },
   title: { color: "#FFFFFF", fontSize: 30, fontWeight: "900" },
   subtitle: { color: "rgba(255,255,255,0.84)", fontSize: 13, marginTop: 6 },
   headerIcon: { width: 48, height: 48, borderRadius: 16, backgroundColor: "rgba(255,255,255,0.18)", borderWidth: 1, borderColor: "rgba(255,255,255,0.26)", alignItems: "center", justifyContent: "center" },
   scannerCardWrap: { marginHorizontal: 18, marginTop: 22 },
-  scannerCard: { backgroundColor: "#FFFFFF", borderRadius: 24, padding: 18, borderWidth: 1, borderColor: "#E0EAF2", shadowColor: "#005F99", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 18, elevation: 5 },
+  scannerCard: { backgroundColor: "#FFFFFF", borderRadius: 24, padding: 18, borderWidth: 1, borderColor: "#E0EAF2", boxShadow: "0px 10px 18px rgba(0, 95, 153, 0.1)", elevation: 5 },
   scannerTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   scannerHeading: { color: "#172033", fontSize: 17, fontWeight: "900" },
   scannerCaption: { color: "#718297", fontSize: 12, marginTop: 4 },
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   readyDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: "#005F99" },
   viewfinder: { height: 200, marginTop: 19, borderRadius: 19, backgroundColor: "#F3F8FC", overflow: "hidden", alignItems: "center", justifyContent: "center" },
   scanTarget: { alignItems: "center", justifyContent: "center", width: 116, height: 116, borderRadius: 58, backgroundColor: "rgba(255,255,255,0.78)", borderWidth: 1, borderColor: "#D7E7F1" },
-  scanBeam: { position: "absolute", top: "50%", left: 22, right: 22, height: 2, backgroundColor: "#C8102E", shadowColor: "#C8102E", shadowOpacity: 0.7, shadowRadius: 8, elevation: 3 },
+  scanBeam: { position: "absolute", top: "50%", left: 22, right: 22, height: 2, backgroundColor: "#C8102E", boxShadow: "0px 0px 8px rgba(200, 16, 46, 0.7)", elevation: 3 },
   corner: { position: "absolute", width: 25, height: 25, borderColor: "#005F99" },
   cornerTopLeft: { top: 18, left: 18, borderTopWidth: 3, borderLeftWidth: 3, borderTopLeftRadius: 8 },
   cornerTopRight: { top: 18, right: 18, borderTopWidth: 3, borderRightWidth: 3, borderTopRightRadius: 8 },
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   tipText: { flex: 1, color: "#718297", fontSize: 12, lineHeight: 17 },
   actionsSection: { marginHorizontal: 18, marginTop: 25 },
   sectionTitle: { color: "#172033", fontSize: 19, fontWeight: "900", marginBottom: 12 },
-  actionCard: { flexDirection: "row", alignItems: "center", gap: 13, padding: 14, marginBottom: 11, backgroundColor: "#FFFFFF", borderRadius: 19, borderWidth: 1, borderColor: "#E0EAF2", shadowColor: "#005F99", shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.07, shadowRadius: 12, elevation: 3 },
+  actionCard: { flexDirection: "row", alignItems: "center", gap: 13, padding: 14, marginBottom: 11, backgroundColor: "#FFFFFF", borderRadius: 19, borderWidth: 1, borderColor: "#E0EAF2", boxShadow: "0px 6px 12px rgba(0, 95, 153, 0.07)", elevation: 3 },
   actionIcon: { width: 46, height: 46, borderRadius: 15, alignItems: "center", justifyContent: "center" },
   actionCopy: { flex: 1 },
   actionTitle: { color: "#172033", fontSize: 14, fontWeight: "800" },

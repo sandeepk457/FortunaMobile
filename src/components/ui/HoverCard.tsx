@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import {
   Animated,
+  Platform,
   type StyleProp,
   type ViewStyle,
 } from "react-native";
@@ -18,7 +19,7 @@ export default function HoverCard({ children, style }: HoverCardProps) {
       toValue,
       speed: 22,
       bounciness: 5,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   };
 

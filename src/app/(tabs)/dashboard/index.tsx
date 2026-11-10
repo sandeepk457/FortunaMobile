@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Animated,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -64,7 +65,7 @@ useEffect(() => {
   const animation = Animated.timing(pageAnim, {
     toValue: 1,
     duration: 650,
-    useNativeDriver: true,
+    useNativeDriver: Platform.OS !== "web",
   });
   animation.start();
   return () => animation.stop();
@@ -638,10 +639,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.18,
-    shadowRadius: 18,
+    boxShadow: "0px 10px 18px rgba(0, 95, 153, 0.18)",
     elevation: 8,
   },
 
@@ -661,10 +659,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 22,
     overflow: "hidden",
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.2,
-    shadowRadius: 20,
+    boxShadow: "0px 14px 20px rgba(0, 95, 153, 0.2)",
     elevation: 8,
   },
 
@@ -744,10 +739,7 @@ const styles = StyleSheet.create({
     minHeight: 200,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.32)",
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.2,
-    shadowRadius: 18,
+    boxShadow: "0px 12px 18px rgba(0, 95, 153, 0.2)",
     elevation: 7,
   },
 
@@ -818,10 +810,7 @@ const styles = StyleSheet.create({
 
     borderWidth: 1,
     borderColor: "#D8E6F0",
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.08)",
     elevation: 3,
   },
 

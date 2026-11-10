@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Animated,
   Easing,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -122,13 +123,13 @@ export default function ModuleScreen({
             toValue: 1,
             duration: 1400,
             easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
           Animated.timing(pulse, {
             toValue: 0,
             duration: 1400,
             easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
         ]),
       ),
@@ -137,7 +138,7 @@ export default function ModuleScreen({
           toValue: 1,
           duration: 3200,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
       ),
     ]);
@@ -162,8 +163,8 @@ export default function ModuleScreen({
           style={styles.hero}
         >
           <Animated.View
-            pointerEvents="none"
             style={[
+              { pointerEvents: "none" },
               styles.heroSweep,
               {
                 transform: [
@@ -345,8 +346,8 @@ export default function ModuleScreen({
                 <View style={[styles.corner, styles.cornerBottomRight]} />
                 <Ionicons name="barcode-outline" size={56} color={secondaryAccent} />
                 <Animated.View
-                  pointerEvents="none"
                   style={[
+                    { pointerEvents: "none" },
                     styles.scanBeam,
                     {
                       backgroundColor: accent,
@@ -432,10 +433,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     overflow: "hidden",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.2,
-    shadowRadius: 18,
+    boxShadow: "0px 12px 18px rgba(0, 95, 153, 0.2)",
     elevation: 8,
   },
   heroSweep: {
@@ -496,10 +494,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#DDE9F1",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.09,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.09)",
     elevation: 4,
   },
   metricIcon: { width: 38, height: 38, borderRadius: 13, alignItems: "center", justifyContent: "center" },
@@ -528,10 +523,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.08)",
     elevation: 3,
   },
   stepRow: { minHeight: 54, flexDirection: "row", alignItems: "flex-start" },
@@ -552,10 +544,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.07,
-    shadowRadius: 12,
+    boxShadow: "0px 6px 12px rgba(0, 95, 153, 0.07)",
     elevation: 3,
   },
   taskIcon: { width: 48, height: 48, borderRadius: 16, alignItems: "center", justifyContent: "center" },
@@ -585,10 +574,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.08)",
     elevation: 3,
   },
   viewfinder: { height: 145, borderRadius: 18, backgroundColor: "#F3F8FC", alignItems: "center", justifyContent: "center", overflow: "hidden" },
@@ -597,7 +583,7 @@ const styles = StyleSheet.create({
   cornerTopRight: { top: 16, right: 16, borderTopWidth: 3, borderRightWidth: 3, borderTopRightRadius: 8 },
   cornerBottomLeft: { bottom: 16, left: 16, borderBottomWidth: 3, borderLeftWidth: 3, borderBottomLeftRadius: 8 },
   cornerBottomRight: { bottom: 16, right: 16, borderBottomWidth: 3, borderRightWidth: 3, borderBottomRightRadius: 8 },
-  scanBeam: { position: "absolute", left: 28, right: 28, top: "50%", height: 2, shadowColor: BRAND_RED, shadowOpacity: 0.7, shadowRadius: 8 },
+  scanBeam: { position: "absolute", left: 28, right: 28, top: "50%", height: 2, boxShadow: "0px 0px 8px rgba(200, 16, 46, 0.7)",},
   scanCopy: { marginTop: 14 },
   scanTitle: { color: INK, fontSize: 15, fontWeight: "900" },
   scanText: { marginTop: 6, color: MUTED, fontSize: 12, lineHeight: 18, fontWeight: "600" },
@@ -616,7 +602,7 @@ const styles = StyleSheet.create({
   actionCopy: { flex: 1 },
   actionTitle: { color: INK, fontSize: 14, fontWeight: "900" },
   actionCaption: { color: MUTED, fontSize: 12, lineHeight: 17, marginTop: 3 },
-  primaryButton: { height: 58, borderRadius: 18, overflow: "hidden", shadowColor: BRAND_RED, shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 7 },
+  primaryButton: { height: 58, borderRadius: 18, overflow: "hidden", boxShadow: "0px 12px 16px rgba(200, 16, 46, 0.2)", elevation: 7 },
   primaryGradient: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10 },
   primaryText: { color: "#FFFFFF", fontSize: 15, fontWeight: "900" },
 });

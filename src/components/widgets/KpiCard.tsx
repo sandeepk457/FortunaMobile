@@ -6,7 +6,6 @@ import {
 
 import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
 import HoverCard from "@/components/ui/HoverCard";
-import { COLORS } from "@/theme/colors";
 
 interface Props {
   title: string;
@@ -47,10 +46,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 3,
     borderColor: "#E0EAF2",
     borderWidth: 1,
-    shadowColor: COLORS.secondary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.1)",
     elevation: 4,
   },
 

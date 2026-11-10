@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import {
   Animated,
   Easing,
+  Platform,
   type StyleProp,
   type ViewStyle,
 } from "react-native";
@@ -25,7 +26,7 @@ export default function AnimatedEntrance({
       duration: 520,
       delay,
       easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     });
 
     animation.start();

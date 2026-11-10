@@ -193,10 +193,7 @@ const styles = StyleSheet.create({
     padding: 24,
     borderWidth: 1,
     borderColor: "#FFFFFF",
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.14,
-    shadowRadius: 22,
+    boxShadow: "0px 16px 22px rgba(0, 95, 153, 0.14)",
     elevation: 8,
   },
 
@@ -239,10 +236,7 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 17,
     overflow: "hidden",
-    shadowColor: "#C8102E",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 14,
+    boxShadow: "0px 10px 14px rgba(200, 16, 46, 0.2)",
     elevation: 6,
   },
 
