@@ -3,16 +3,24 @@
     "version": ">= 27.5.0",
     "appVersionSource": "remote"
   },
-  "build": {
+   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "submit": {
