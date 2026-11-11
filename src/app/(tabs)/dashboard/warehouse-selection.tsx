@@ -289,9 +289,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
 
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",
 
     elevation: 2,
   },
@@ -331,9 +329,7 @@ const styles = StyleSheet.create({
 
     padding: 20,
 
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",
 
     elevation: 3,
 
@@ -441,9 +437,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
 
-    shadowColor: "#C8102E",
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
+    boxShadow: "0px 0px 10px rgba(200, 16, 46, 0.3)",
 
     elevation: 6,
   },

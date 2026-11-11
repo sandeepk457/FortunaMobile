@@ -9,7 +9,11 @@
     "scheme": "fortunamobile",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/images/fortuna-globe.png"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.fortunaglobalsupplychain.FortunaMobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +22,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.fortunaglobalsupplychain.FortunaMobile"
     },
     "web": {
       "output": "static",
@@ -35,11 +40,21 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "18bdeac7-271a-4301-8ebe-f802278f06d6"
+      }
     }
   }
 }

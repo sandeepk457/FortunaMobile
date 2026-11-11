@@ -5,6 +5,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import {
   Animated,
   Easing,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -80,13 +81,13 @@ export default function ExecutionScaffold({
             toValue: 1,
             duration: 1500,
             easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
           Animated.timing(pulse, {
             toValue: 0,
             duration: 1500,
             easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
           }),
         ]),
       ),
@@ -95,7 +96,7 @@ export default function ExecutionScaffold({
           toValue: 1,
           duration: 3600,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
       ),
     ]);
@@ -128,8 +129,8 @@ export default function ExecutionScaffold({
           style={styles.hero}
         >
           <Animated.View
-            pointerEvents="none"
             style={[
+              { pointerEvents: "none" },
               styles.heroSweep,
               {
                 transform: [
@@ -350,10 +351,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     overflow: "hidden",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.2,
-    shadowRadius: 18,
+    boxShadow: "0px 12px 18px rgba(0, 95, 153, 0.2)",
     elevation: 8,
   },
   heroSweep: {
@@ -438,10 +436,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#DDE9F1",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.09,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.09)",
     elevation: 4,
   },
   metricIcon: {
@@ -461,10 +456,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.08)",
     elevation: 3,
   },
   stageRow: { flexDirection: "row", alignItems: "center", minHeight: 38 },
@@ -502,10 +494,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
+    boxShadow: "0px 5px 10px rgba(0, 95, 153, 0.06)",
     elevation: 2,
   },
   actionIcon: { width: 42, height: 42, borderRadius: 14, alignItems: "center", justifyContent: "center" },
@@ -516,10 +505,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
+    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.08)",
     elevation: 3,
   },
   dataTitle: { fontSize: 17, fontWeight: "900", marginBottom: 12 },

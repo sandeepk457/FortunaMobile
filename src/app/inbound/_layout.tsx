@@ -28,11 +28,11 @@ export default function InboundLayout() {
       />
 
       <Stack.Screen
-        name="item-scan"
+        name="rfid-scan"
       />
 
       <Stack.Screen
-        name="rfid-scan"
+        name="scan-item"
       />
 
       <Stack.Screen

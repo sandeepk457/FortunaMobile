@@ -199,10 +199,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderBottomLeftRadius: 26,
     borderBottomRightRadius: 26,
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 17,
+    boxShadow: "0px 10px 17px rgba(0, 95, 153, 0.2)",
     elevation: 8,
   },
 
@@ -215,10 +212,7 @@ const styles = StyleSheet.create({
   summaryWrap: {
     margin: 18,
     borderRadius: 21,
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 9 },
-    shadowOpacity: 0.09,
-    shadowRadius: 15,
+    boxShadow: "0px 9px 15px rgba(0, 95, 153, 0.09)",
     elevation: 4,
   },
 
@@ -260,10 +254,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#E0EAF2",
-    shadowColor: "#005F99",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.07,
-    shadowRadius: 12,
+    boxShadow: "0px 6px 12px rgba(0, 95, 153, 0.07)",
     elevation: 3,
   },
 
