@@ -13,6 +13,7 @@ const PUBLIC_PATHS = ["/", "/auth/login", "/auth/forgot-password"];
 export default function RootLayout() {
   const pathname = usePathname();
   const router = useRouter();
+  const isPublicPath = PUBLIC_PATHS.includes(pathname);
 
   useEffect(() => {
     let active = true;
@@ -68,7 +69,7 @@ export default function RootLayout() {
           }}
         />
       </Drawer>
-      <BottomNavigation />
+      {!isPublicPath && <BottomNavigation />}
     </View>
   );
 }

@@ -19,7 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 
-import { getStoredSession, loginWithCredentials } from "@/services/auth";
+import { loginWithCredentials } from "@/services/auth";
 
 const BRAND_RED = "#C8102E";
 const BRAND_BLUE = "#005F99";
@@ -42,24 +42,6 @@ export default function LoginScreen() {
   const [cardAnim] = useState(() => new Animated.Value(0));
   const [orbitAnim] = useState(() => new Animated.Value(0));
   const [shineAnim] = useState(() => new Animated.Value(0));
-
-  useEffect(() => {
-    let active = true;
-
-    async function checkExistingSession() {
-      const session = await getStoredSession();
-
-      if (active && session) {
-        router.replace("/dashboard");
-      }
-    }
-
-    checkExistingSession();
-
-    return () => {
-      active = false;
-    };
-  }, [router]);
 
   useEffect(() => {
     const animation = Animated.parallel([
@@ -146,14 +128,44 @@ export default function LoginScreen() {
     }
   };
 
+  const cardAnimationStyle =
+    Platform.OS === "android"
+      ? { opacity: 1 }
+      : {
+          opacity: cardAnim,
+          transform: [
+            { perspective: 1000 },
+            {
+              rotateX: cardAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["5deg", "0deg"],
+              }),
+            },
+            {
+              translateY: cardAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [34, 0],
+              }),
+            },
+            {
+              scale: cardAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.96, 1],
+              }),
+            },
+          ],
+        };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
+      enabled={Platform.OS === "ios"}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="none"
+        keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.scene}>
@@ -277,33 +289,7 @@ export default function LoginScreen() {
           </View>
 
           <Animated.View
-            style={[
-              styles.cardWrap,
-              {
-                opacity: cardAnim,
-                transform: [
-                  { perspective: 1000 },
-                  {
-                    rotateX: cardAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ["5deg", "0deg"],
-                    }),
-                  },
-                  {
-                    translateY: cardAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [34, 0],
-                    }),
-                  },
-                  {
-                    scale: cardAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0.96, 1],
-                    }),
-                  },
-                ],
-              },
-            ]}
+            style={[styles.cardWrap, cardAnimationStyle]}
           >
             <LinearGradient
               colors={["#FFFFFF", "#F7FAFD", "#EEF5FA"]}

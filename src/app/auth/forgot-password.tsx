@@ -31,6 +31,7 @@ export default function ForgotPasswordScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
+      enabled={Platform.OS === "ios"}
       behavior={
         Platform.OS === "ios"
           ? "padding"
@@ -41,6 +42,8 @@ export default function ForgotPasswordScreen() {
         contentContainerStyle={
           styles.scrollContainer
         }
+        keyboardDismissMode="none"
+        keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
         {/* BACK BUTTON */}
