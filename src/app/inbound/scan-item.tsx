@@ -9,13 +9,29 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import type { BarcodeScanningResult } from "expo-camera";
 import { useRouter } from "expo-router";
+import CameraScanner from "@/components/CameraScanner";
 
 export default function ItemScanScreen() {
   const router = useRouter();
 
   const [scanValue, setScanValue] =
     useState("");
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [recentScans, setRecentScans] = useState([
+    { code: "QR-8901234567890", item: "SKU-001", description: "Corrugated Box" },
+    { code: "QR-8901234567891", item: "SKU-002", description: "Stretch Film" },
+  ]);
+
+  const onScanned = (result: BarcodeScanningResult) => {
+    const code = result.data.trim();
+    setScanValue(code);
+    setRecentScans((current) => [
+      { code, item: result.type.toUpperCase(), description: "Scanned item" },
+      ...current.filter((scan) => scan.code !== code),
+    ].slice(0, 5));
+  };
 
   return (
     <View style={styles.container}>
@@ -76,6 +92,7 @@ export default function ItemScanScreen() {
 
           <TouchableOpacity
             style={styles.scanButton}
+            onPress={() => setScannerVisible(true)}
           >
             <Text style={styles.buttonText}>
               START SCAN
@@ -91,33 +108,13 @@ export default function ItemScanScreen() {
             Recent Scans
           </Text>
 
-          <View style={styles.scanCard}>
-            <Text style={styles.scanCode}>
-              QR-8901234567890
-            </Text>
-
-            <Text style={styles.scanItem}>
-              SKU-001
-            </Text>
-
-            <Text style={styles.scanDesc}>
-              Corrugated Box
-            </Text>
-          </View>
-
-          <View style={styles.scanCard}>
-            <Text style={styles.scanCode}>
-              QR-8901234567891
-            </Text>
-
-            <Text style={styles.scanItem}>
-              SKU-002
-            </Text>
-
-            <Text style={styles.scanDesc}>
-              Stretch Film
-            </Text>
-          </View>
+          {recentScans.map((scan) => (
+            <View key={scan.code} style={styles.scanCard}>
+              <Text style={styles.scanCode}>{scan.code}</Text>
+              <Text style={styles.scanItem}>{scan.item}</Text>
+              <Text style={styles.scanDesc}>{scan.description}</Text>
+            </View>
+          ))}
 
         </View>
 
@@ -137,7 +134,7 @@ export default function ItemScanScreen() {
         </TouchableOpacity>
 
       </ScrollView>
-
+      <CameraScanner visible={scannerVisible} onClose={() => setScannerVisible(false)} onScanned={onScanned} />
     </View>
   );
 }

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -31,19 +33,42 @@ export default function LoginScreen() {
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [focusedField, setFocusedField] = useState<"email" | "password" | null>(
-    null,
-  );
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [floatAnim] = useState(() => new Animated.Value(0));
   const [pulseAnim] = useState(() => new Animated.Value(0));
   const [cardAnim] = useState(() => new Animated.Value(0));
   const [orbitAnim] = useState(() => new Animated.Value(0));
   const [shineAnim] = useState(() => new Animated.Value(0));
+  const scrollViewRef = useRef<ScrollView>(null);
+  const passwordInputRef = useRef<TextInput>(null);
+  const passwordFocusedRef = useRef(false);
 
   useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardVisible(true);
+      if (passwordFocusedRef.current) {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false);
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      return;
+    }
+
     const animation = Animated.parallel([
       Animated.timing(cardAnim, {
         toValue: 1,
@@ -163,20 +188,44 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContainer}
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={[
+          styles.scrollContainer,
+          keyboardVisible && styles.keyboardScrollContainer,
+        ]}
         keyboardDismissMode="none"
         keyboardShouldPersistTaps="always"
+        scrollEnabled
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.scene}>
-          <View style={styles.backgroundGrid}>
+        <View
+          style={[
+            styles.scene,
+            keyboardVisible && styles.keyboardScene,
+          ]}
+        >
+          <Pressable
+            accessibilityLabel="Dismiss keyboard"
+            onPress={Keyboard.dismiss}
+            style={[
+              styles.dismissKeyboardArea,
+              !keyboardVisible && styles.hidden,
+            ]}
+          />
+          <View
+            pointerEvents="none"
+            style={[styles.backgroundGrid, keyboardVisible && styles.hidden]}
+          >
             {Array.from({ length: 10 }).map((_, index) => (
               <View key={`grid-${index}`} style={styles.gridLine} />
             ))}
           </View>
           <Animated.View
+            pointerEvents="none"
             style={[
               styles.redOrb,
+              keyboardVisible && styles.hidden,
               {
                 opacity: pulseAnim.interpolate({
                   inputRange: [0, 1],
@@ -194,8 +243,10 @@ export default function LoginScreen() {
             ]}
           />
           <Animated.View
+            pointerEvents="none"
             style={[
               styles.blueOrb,
+              keyboardVisible && styles.hidden,
               {
                 opacity: pulseAnim.interpolate({
                   inputRange: [0, 1],
@@ -213,7 +264,7 @@ export default function LoginScreen() {
             ]}
           />
 
-          <View style={styles.hero}>
+          <View style={[styles.hero, keyboardVisible && styles.hidden]}>
             <Animated.View
               style={[
                 { pointerEvents: "none" },
@@ -309,12 +360,7 @@ export default function LoginScreen() {
               </View>
 
               <Text style={styles.label}>Email Address</Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  focusedField === "email" && styles.inputFocused,
-                ]}
-              >
+              <View style={styles.inputContainer}>
                 <Ionicons name="mail-outline" size={20} color={BRAND_BLUE} />
                 <TextInput
                   style={styles.input}
@@ -322,34 +368,36 @@ export default function LoginScreen() {
                   placeholderTextColor="#8796A8"
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  autoCorrect={false}
                   value={email}
                   onChangeText={setEmail}
-                  onFocus={() => setFocusedField("email")}
-                  onBlur={() => setFocusedField(null)}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordInputRef.current?.focus()}
                 />
               </View>
 
               <Text style={styles.label}>Password</Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  focusedField === "password" && styles.inputFocused,
-                ]}
-              >
+              <View style={styles.inputContainer}>
                 <Ionicons
                   name="lock-closed-outline"
                   size={20}
                   color={BRAND_BLUE}
                 />
                 <TextInput
+                  ref={passwordInputRef}
                   placeholder="Enter password"
                   placeholderTextColor="#8796A8"
                   secureTextEntry={!showPassword}
                   style={styles.input}
                   value={password}
                   onChangeText={setPassword}
-                  onFocus={() => setFocusedField("password")}
-                  onBlur={() => setFocusedField(null)}
+                  returnKeyType="done"
+                  onFocus={() => {
+                    passwordFocusedRef.current = true;
+                  }}
+                  onBlur={() => {
+                    passwordFocusedRef.current = false;
+                  }}
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
@@ -444,6 +492,7 @@ export default function LoginScreen() {
                 style={[
                   { pointerEvents: "none" },
                   styles.floatingPanel,
+                  keyboardVisible && styles.hidden,
                   styles.panelLeft,
                   {
                     transform: [
@@ -469,6 +518,7 @@ export default function LoginScreen() {
                 style={[
                   { pointerEvents: "none" },
                   styles.floatingPanel,
+                  keyboardVisible && styles.hidden,
                   styles.panelRight,
                   {
                     transform: [
@@ -497,7 +547,7 @@ export default function LoginScreen() {
             </>
           )}
 
-          <View style={styles.footer}>
+          <View style={[styles.footer, keyboardVisible && styles.hidden]}>
             <Text style={styles.footerText}>
               Fortuna Global Supply Chain Systems
             </Text>
@@ -511,13 +561,29 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#EEF5FA" },
+  scrollView: { flex: 1 },
   scrollContainer: { flexGrow: 1, paddingHorizontal: 20, paddingVertical: 28 },
+  keyboardScrollContainer: { paddingTop: 8, paddingBottom: 12 },
   scene: {
     flex: 1,
     justifyContent: "center",
     minHeight: 760,
-    overflow: "hidden",
+    position: "relative",
   },
+  keyboardScene: {
+    justifyContent: "flex-start",
+    minHeight: 0,
+    paddingTop: 4,
+  },
+  dismissKeyboardArea: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 0,
+  },
+  hidden: { display: "none" },
   backgroundGrid: {
     position: "absolute",
     top: 0,
@@ -621,7 +687,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: "center",
   },
-  cardWrap: { zIndex: 2, width: "100%", maxWidth: 480, alignSelf: "center" },
+  cardWrap: {
+    zIndex: 2,
+    width: "100%",
+    maxWidth: 480,
+    alignSelf: "center",
+  },
   card: {
     borderRadius: 30,
     padding: 22,
@@ -670,11 +741,6 @@ const styles = StyleSheet.create({
     height: 58,
     backgroundColor: "#FFFFFF",
     marginBottom: 12,
-  },
-  inputFocused: {
-    borderColor: BRAND_BLUE,
-    boxShadow: "0px 8px 14px rgba(0, 95, 153, 0.12)",
-    elevation: 3,
   },
   input: {
     flex: 1,

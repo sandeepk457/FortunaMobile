@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import type { BarcodeScanningResult } from "expo-camera";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
@@ -15,6 +16,7 @@ import {
 
 import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
 import HoverCard from "@/components/ui/HoverCard";
+import CameraScanner from "@/components/CameraScanner";
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -110,6 +112,8 @@ export default function ModuleScreen({
   const router = useRouter();
   const [pulse] = useState(() => new Animated.Value(0));
   const [sweep] = useState(() => new Animated.Value(0));
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [lastScannedValue, setLastScannedValue] = useState("");
   const activeStep = useMemo(
     () => steps.find((step) => step.status === "active") ?? steps[0],
     [steps],
@@ -151,6 +155,10 @@ export default function ModuleScreen({
     if (route) {
       router.push(route as never);
     }
+  };
+
+  const handleScanned = (result: BarcodeScanningResult) => {
+    setLastScannedValue(`${result.data} · ${result.type.toUpperCase()}`);
   };
 
   return (
@@ -368,6 +376,15 @@ export default function ModuleScreen({
                 <Text style={styles.scanText}>
                   Repeated scans are debounced; invalid warehouse, quantity or item identity blocks submission.
                 </Text>
+                {lastScannedValue ? <Text style={styles.lastScanned}>Last scan: {lastScannedValue}</Text> : null}
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  style={styles.scanButton}
+                  onPress={() => setScannerVisible(true)}
+                >
+                  <Ionicons name="scan-outline" size={18} color="#FFFFFF" />
+                  <Text style={styles.scanButtonText}>Open camera scanner</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </HoverCard>
@@ -418,6 +435,7 @@ export default function ModuleScreen({
           </TouchableOpacity>
         </AnimatedEntrance>
       </ScrollView>
+      <CameraScanner visible={scannerVisible} onClose={() => setScannerVisible(false)} onScanned={handleScanned} />
     </View>
   );
 }
@@ -587,6 +605,9 @@ const styles = StyleSheet.create({
   scanCopy: { marginTop: 14 },
   scanTitle: { color: INK, fontSize: 15, fontWeight: "900" },
   scanText: { marginTop: 6, color: MUTED, fontSize: 12, lineHeight: 18, fontWeight: "600" },
+  lastScanned: { marginTop: 9, color: BRAND_BLUE, fontSize: 12, fontWeight: "800" },
+  scanButton: { alignSelf: "flex-start", marginTop: 14, paddingHorizontal: 15, paddingVertical: 12, borderRadius: 12, backgroundColor: BRAND_BLUE, flexDirection: "row", alignItems: "center", gap: 8 },
+  scanButtonText: { color: "#FFFFFF", fontSize: 13, fontWeight: "800" },
   actionCard: {
     flexDirection: "row",
     alignItems: "center",

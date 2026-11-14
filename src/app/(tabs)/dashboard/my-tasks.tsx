@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
 
   taskWrap: {
     marginHorizontal: 20,
+    marginTop: 14,
     marginBottom: 12,
   },
 
