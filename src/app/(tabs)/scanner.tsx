@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import type { BarcodeScanningResult } from "expo-camera";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import {
@@ -14,12 +15,19 @@ import {
 } from "react-native";
 import AnimatedEntrance from "@/components/ui/AnimatedEntrance";
 import HoverCard from "@/components/ui/HoverCard";
+import CameraScanner from "@/components/CameraScanner";
 
 export default function ScannerScreen() {
   const router = useRouter();
   const go = (route: string) => router.push(route as never);
   const [sweep] = useState(() => new Animated.Value(0));
   const [pulse] = useState(() => new Animated.Value(0));
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [lastScannedValue, setLastScannedValue] = useState("");
+
+  const handleScanned = (result: BarcodeScanningResult) => {
+    setLastScannedValue(`${result.data} · ${result.type.toUpperCase()}`);
+  };
 
   useEffect(() => {
     const sweepAnimation = Animated.loop(
@@ -58,11 +66,17 @@ export default function ScannerScreen() {
 
         <AnimatedEntrance delay={100} style={styles.scannerCardWrap}>
           <HoverCard>
-            <View style={styles.scannerCard}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel="Open camera scanner"
+              activeOpacity={0.88}
+              style={styles.scannerCard}
+              onPress={() => setScannerVisible(true)}
+            >
               <View style={styles.scannerTopRow}>
                 <View>
                   <Text style={styles.scannerHeading}>Ready to scan</Text>
-                  <Text style={styles.scannerCaption}>Select a supported operation below</Text>
+                  <Text style={styles.scannerCaption}>Tap to open the camera scanner</Text>
                 </View>
                 <Animated.View style={[styles.readyIndicator, { transform: [{ scale: pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.13] }) }] }]}>
                   <View style={styles.readyDot} />
@@ -78,9 +92,11 @@ export default function ScannerScreen() {
               </View>
               <View style={styles.tipRow}>
                 <Ionicons name="information-circle-outline" size={17} color="#005F99" />
-                <Text style={styles.tipText}>Pick a workflow to continue to its scan step.</Text>
+                <Text numberOfLines={2} style={styles.tipText}>
+                  {lastScannedValue ? `Last scan: ${lastScannedValue}` : "Tap to scan a code, or choose a workflow below."}
+                </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </HoverCard>
         </AnimatedEntrance>
 
@@ -160,6 +176,11 @@ export default function ScannerScreen() {
           </HoverCard>
         </AnimatedEntrance>
       </ScrollView>
+      <CameraScanner
+        visible={scannerVisible}
+        onClose={() => setScannerVisible(false)}
+        onScanned={handleScanned}
+      />
     </View>
   );
 }
